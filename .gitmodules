@@ -1,0 +1,13 @@
+[submodule "submodule/glfw"]
+	path = submodule/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "include/imgui"]
+	path = include/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking
+[submodule "submodule/tweeny"]
+	path = submodule/tweeny
+	url = https://github.com/mobius3/tweeny.git
+[submodule "thirdparty/upx"]
+	path = thirdparty/upx
+	url = https://github.com/upx/upx.git
