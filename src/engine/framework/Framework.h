@@ -13,6 +13,10 @@
 
 #include "engine/component/IComponent.h"
 
+#include <string>
+#include <unordered_map>
+#include <vector>
+
 namespace cmaterial {
     class Framework {
         enum error {

@@ -13,6 +13,10 @@
 
 #include "content/component/BasicWindow/BasicWindow.h"
 
+#include <string>
+#include <unordered_map>
+#include <vector>
+
 cmaterial::Framework::Framework() {
     initialized = false;
 
