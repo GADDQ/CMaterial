@@ -2,7 +2,7 @@
 # Created by Earth_Studio on 2026/4/12.
 #
 
-cmake_minimum_required(VERSION 4.1)
+cmake_minimum_required(VERSION 3.31...4.1)
 project(CMaterial LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -86,16 +86,24 @@ if(MSVC AND CMAKE_BUILD_TYPE MATCHES "Release")
 elseif((CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang") AND CMAKE_BUILD_TYPE MATCHES "Release")
     target_compile_options(CMaterial PRIVATE
             -O3
-            -ffunction-sections
-            -fdata-sections
             -fno-rtti
             -fno-strict-aliasing
     )
 
-    target_link_options(CMaterial PRIVATE
-            "-Wl,--gc-sections"
-            "-s"
-    )
+    if(APPLE)
+        target_link_options(CMaterial PRIVATE
+                "-Wl,-dead_strip"
+        )
+    else()
+        target_compile_options(CMaterial PRIVATE
+                -ffunction-sections
+                -fdata-sections
+        )
+        target_link_options(CMaterial PRIVATE
+                "-Wl,--gc-sections"
+                "-s"
+        )
+    endif()
 endif()
 
 if (CMAKE_BUILD_TYPE MATCHES "Release")
