@@ -1,0 +1,60 @@
+name: Build CMaterial
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact_name: CMaterial-Windows
+            executable: build/Release/CMaterial.exe
+          - os: ubuntu-latest
+            artifact_name: CMaterial-Linux
+            executable: build/CMaterial
+          - os: macos-latest
+            artifact_name: CMaterial-macOS
+            executable: build/CMaterial
+
+    steps:
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: choco install upx
+
+    - name: Install Dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xorg-dev libgl1-mesa-dev upx-ucl
+
+    - name: Install Dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: brew install upx
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.artifact_name }}
+        path: ${{ matrix.executable }}
+        if-no-files-found: error
