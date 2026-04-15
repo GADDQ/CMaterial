@@ -1,16 +1,17 @@
 # CMaterial
 
-> **WIP (Work in Progress)**
->
-> A modern cross-platform GUI framework based on ImGui and GLFW, featuring Material Design 3 by default.
-
 ![C++20](https://img.shields.io/badge/C++-20-blue.svg?style=for-the-badge&logo=c%2B%2B)
 ![CMake](https://img.shields.io/badge/CMake-4.1+-success.svg?style=for-the-badge&logo=cmake)
-![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-orange.svg?style=for-the-badge)
 
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwNzhENiIgZD0iTTAgMy40NDlMOS43NSAyLjExMnY5LjQwNUgwek0xMC44NDkgMS45NjJMMjQgMHYxMS41MTdIMTAuODQ5ek0wIDEyLjQ4M2g5Ljc1djkuNDA1TDAgMjAuNTUxek0xMC44NDkgMTIuNDgzSDI0VjI0bC0xMy4xNTEtMS45NjJ6Ii8+PC9zdmc+)
 ![Platform](https://img.shields.io/badge/Platform-Linux-orange.svg?style=for-the-badge&logo=linux)
 ![Platform](https://img.shields.io/badge/Platform-Macos-black.svg?style=for-the-badge&logo=apple)
+
+> [!WARNING]
+> **Actively under development! Documentation, screenshots, and examples are NOT yet available.**
+
+A modern cross-platform GUI framework based on ImGui and GLFW, featuring Material Design 3 by default.
 
 ---
 
