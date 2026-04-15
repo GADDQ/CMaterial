@@ -19,7 +19,10 @@ set(GLFW_BUILD_X11 ON CACHE BOOL "" FORCE)
 
 add_subdirectory(submodule/glfw)
 add_subdirectory(submodule/tweeny)
-add_subdirectory(thirdparty/upx)
+
+if (NOT APPLE AND CMAKE_BUILD_TYPE MATCHES "Release")
+    add_subdirectory(thirdparty/upx)
+endif ()
 
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS
         "src/engine/*.cpp"
