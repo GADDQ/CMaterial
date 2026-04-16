@@ -1,0 +1,41 @@
+name: Sync Labels to Project
+
+on:
+  issues:
+    types: [labeled, closed, reopened]
+
+jobs:
+  sync-to-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Project Data
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          USER: GADDQ
+          PROJECT_NUM: 2
+        run: |
+          LABEL_NAME="${{ github.event.label.name }}"
+          ISSUE_NUMBER="${{ github.event.issue.number }}"
+          STATUS_LABELS=("Todo" "Planning" "Paused" "In Progress")
+          
+          if [[ "${{ github.event.action }}" == "closed" ]]; then
+            TARGET_STATUS="Done"
+          elif [[ "${{ github.event.action }}" == "reopened" ]]; then
+            TARGET_STATUS="Todo"
+          else
+            if [[ ! " ${STATUS_LABELS[@]} " =~ " ${LABEL_NAME} " ]]; then
+              echo "Not a status label, skipping."
+              exit 0
+            fi
+            TARGET_STATUS=$LABEL_NAME
+          fi
+
+          for label in "${STATUS_LABELS[@]}"; do
+            if [ "$label" != "$TARGET_STATUS" ]; then
+              gh issue edit $ISSUE_NUMBER --remove-label "$label" || true
+            fi
+          done
+
+          item_id=$(gh project item-add $PROJECT_NUM --owner "$USER" --url "${{ github.event.issue.html_url }}" --format json | jq -r '.id')
+          
+          gh project item-edit --id "$item_id" --project-number $PROJECT_NUM --owner "$USER" --field "Status" --value "$TARGET_STATUS"
