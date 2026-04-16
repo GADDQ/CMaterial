@@ -3,3 +3,13 @@
 //
 
 #include "IComponent.h"
+
+void cmaterial::component::IComponent::addComponent(cmaterial::component::IComponent *component) {
+    if (component == nullptr)
+        return;
+
+    if (component->name.empty())
+        return;
+
+    components.insert({component->name, component});
+}

@@ -18,6 +18,7 @@ namespace cmaterial::component {
     public:
         virtual ~IComponent() = default;
         virtual void render(ImGuiIO *io) = 0;
+        virtual void addComponent(IComponent *component);
 
     //protected:
         std::string name;
@@ -25,7 +26,7 @@ namespace cmaterial::component {
         int yPercent = 0;
         bool isActive = true;
         bool isDead = false;
-        std::unordered_map<std::string, IComponent *> childComponents;
+        std::unordered_map<std::string, IComponent *> components;
     };
 }
 

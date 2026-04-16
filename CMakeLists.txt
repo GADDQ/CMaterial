@@ -51,6 +51,8 @@ add_executable(CMaterial
 
         ${ENGINE_SOURCES}
         ${APP_SOURCES}
+        src/content/component/BasicButton/BasicButton.cpp
+        src/content/component/BasicButton/BasicButton.h
 )
 
 target_include_directories(CMaterial PRIVATE
