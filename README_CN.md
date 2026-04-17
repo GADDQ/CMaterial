@@ -38,6 +38,7 @@
 ## 依赖库
 - **[GLFW](https://github.com/glfw/glfw)** : 一个轻量级、跨平台的 API，用于创建窗口、上下文、读取输入及处理事件。
 - **[GLAD](https://github.com/dav1dde/glad)** : 基于官方规范的多语言 Vulkan/GL/GLES/EGL/GLX/WGL 加载器生成工具。
+- **[ImGui](https://github.com/ocornut/imgui)** : 一个依赖极简、无冗余的 C++ 图形用户界面。
 - **[tweeny](https://github.com/mobius3/tweeny)** : 一个专为游戏和其他精美交互式软件打造的复杂补间动画库。
 - **[stb_image](https://github.com/nothings/stb)** : C/C++ 领域极具盛名的单头文件公共域图像加载库。
 - **[mimalloc](https://github.com/microsoft/mimalloc)** :  一款性能卓越、体积精简的通用内存分配器。

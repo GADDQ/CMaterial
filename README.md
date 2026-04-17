@@ -38,6 +38,7 @@ Neither Immediate Mode nor Retained Mode—but ***both***. CMaterial leverages R
 ## Libraries
 - **[GLFW](https://github.com/glfw/glfw)** : A lightweight, cross-platform API for creating windows, contexts, handling input and events.
 - **[GLAD](https://github.com/dav1dde/glad)** : A multi-Language Vulkan/GL/GLES/EGL/GLX/WGL loader-generator based on the official specifications.
+- **[ImGui](https://github.com/ocornut/imgui)** : A bloat-free Graphical User interface for C++ with minimal dependencies.
 - **[tweeny](https://github.com/mobius3/tweeny)** : An inbetweening library designed for the creation of complex animations and beautiful interactive software.
 - **[stb_image](https://github.com/nothings/stb)** : A highly renowned single-file public domain library for loading images in C/C++.
 - **[mimalloc](https://github.com/microsoft/mimalloc)** :  A compact general purpose allocator with excellent performance.
