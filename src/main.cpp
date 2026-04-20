@@ -5,35 +5,29 @@
 #include "engine/framework/Framework.h"
 
 #include "content/component/BasicButton/BasicButton.h"
-#include "content/component/BasicWindow/BasicWindow.h"
 #include "content/component/CreatorButton/CreatorButton.h"
-
-void eventSend(cmaterial::Framework *app);
+#include "content/logic/listener/WindowLogic.h"
+#include "content/window/BasicWindow/BasicWindow.h"
 
 int main() {
     cmaterial::Framework app;
     app.initialize();
 
-    //app.addListener(new cmaterial::event::IListener());
+    cmaterial::event::EventBus::addListener(new cmaterial::event::WindowLogic(&app));
 
-    cmaterial::component::BasicWindow window1;
-    window1.name = "window1";
-    cmaterial::component::BasicWindow window2;
-    window2.name = "window2";
+    cmaterial::window::BasicWindow* window1 = new cmaterial::window::BasicWindow("window1", 300, 150);
+    cmaterial::window::BasicWindow* window2 = new cmaterial::window::BasicWindow("window2", 300, 150);
 
-    cmaterial::component::BasicButton button1;
-    button1.name = "buttonInWindow1";
-    cmaterial::component::CreatorButton button2 = cmaterial::component::CreatorButton(&app);
-    button2.name = "buttonInWindow2";
+    cmaterial::component::BasicButton* button1 = new cmaterial::component::BasicButton();
+    button1->name = "buttonInWindow1";
+    cmaterial::component::CreatorButton* button2 = new cmaterial::component::CreatorButton();
+    button2->name = "buttonInWindow2";
 
-    cmaterial::component::BasicButton eventTestButton;
-    eventTestButton.name = "EventTest";
+    app.addWindow(window1);
+    window1->addComponent(button1);
 
-    app.addComponent(&window1);
-    window1.addComponent(&button1);
-
-    app.addComponent(&window2);
-    window2.addComponent(&button2);
+    app.addWindow(window2);
+    window2->addComponent(button2);
 
     app.run();
     return 0;

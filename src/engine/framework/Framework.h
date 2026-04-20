@@ -1,22 +1,18 @@
 //
-// Created by Earth_Studio on 2026/4/15.
+// Created by Earth_Studio on 2026/4/19.
 //
 
 #ifndef CMATERIAL_FRAMEWORK_H
 #define CMATERIAL_FRAMEWORK_H
 
 
+#include <unordered_map>
 
 #include <glad/gl.h>
-#include <GLFW/glfw3.h>
-#include "imgui.h"
+#include "GLFW/glfw3.h"
 
-#include "engine/component/IComponent.h"
-#include "engine/eventbus/EventBus.h"
+#include "engine/window/IWindow.h"
 
-#include <string>
-#include <unordered_map>
-#include <vector>
 
 namespace cmaterial {
     class Framework {
@@ -29,26 +25,20 @@ namespace cmaterial {
             GLAD_LOAD_GL_FAILED
         };
 
-        Framework();
+        Framework() = default;
         ~Framework();
 
         error initialize();
         error run();
-
-        void addComponent(component::IComponent *component);
-        void addListener(event::IListener *listener);
-
-        event::EventBus* getEventBus();
+        void addWindow(window::IWindow * window);
 
     private:
-        bool initialized;
+        bool isInitialized = false;
 
-        ImGuiIO *io;
-        GLFWwindow *hidden_window;
-        std::unordered_map<std::string, component::IComponent *> components;
-        std::vector<std::string> deadComponentNames;
-
-        event::EventBus eventBus;
+        GLFWwindow* hiddenWindow = nullptr;
+        ImFontAtlas* fontAtlas = nullptr;
+        std::unordered_map<std::string, window::IWindow*> windows;
+        std::vector<std::string> deadWindows;
     };
 }
 

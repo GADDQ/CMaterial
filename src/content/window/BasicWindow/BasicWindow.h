@@ -6,18 +6,16 @@
 #define CMATERIAL_BASICWINDOW_H
 
 #include "engine/component/IComponent.h"
+#include "engine/window/IWindow.h"
 #include "imgui.h"
 
-namespace cmaterial::component{
-    class BasicWindow : public IComponent {
+namespace cmaterial::window {
+    class BasicWindow : public IWindow {
     public:
-        BasicWindow() = default;
+        using IWindow::IWindow;
         ~BasicWindow() = default;
 
         void render(ImGuiIO *io) override;
-
-    private:
-        bool is_open = true;
     };
 }
 
