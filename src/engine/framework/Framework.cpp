@@ -37,6 +37,7 @@ namespace cmaterial {
         }
 
         glfwMakeContextCurrent(hiddenWindow);
+        glfwSwapInterval(1);
 
         if (!gladLoadGL(glfwGetProcAddress))
             return GLAD_LOAD_GL_FAILED;
@@ -55,9 +56,6 @@ namespace cmaterial {
         if (!isInitialized)
             return NOT_INIT;
 
-        double lastRenderTime = 0;
-        const double minFrameInterval = 1.0 / 165.0;
-
         int global_frame_count = 0;
 
         EventBus::postEvent(new event::internal::EmptyEvent);
@@ -65,17 +63,19 @@ namespace cmaterial {
             if (!EventBus::dispatch())
                 glfwWaitEvents();
 
-            double currentTime = glfwGetTime();
-            if (currentTime - lastRenderTime < minFrameInterval)
-                continue;
-
-            lastRenderTime = currentTime;
-
             ImFontAtlasUpdateNewFrame(fontAtlas, ++global_frame_count, true);
             for (std::pair<std::string, window::IWindow *> pair : windows) {
+                pair.second->update();
+
                 if (pair.second->isDead) {
                     deadWindows.push_back(pair.first);
                     continue;
+                }
+
+                if (!pair.second->isHovered()) {
+                    if (!pair.second->isInitialized)
+                        pair.second->isInitialized = true;
+                    else continue;
                 }
 
                 pair.second->drawWindow();

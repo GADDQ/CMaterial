@@ -16,6 +16,11 @@ namespace cmaterial::window {
         ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings;
 
         if (ImGui::Begin(this->name.c_str(), nullptr, flags)) {
+            ImGui::Text("Hello, Engine!");
+            ImGui::Text("Frame time: %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
+
+            ImGui::Separator();
+
             for (auto &pair: components) {
                 if (pair.second->getIsDead()) {
                     deadComponents.push_back(pair.first);

@@ -20,7 +20,7 @@ namespace cmaterial::event {
 
         EVENTHANDLER(cmaterial::event::SpawnWindowRequest, onSpawnRequest)
         void onSpawnRequest(SpawnWindowRequest* e) {
-            auto* newWin = new window::BasicWindow(e->title, 400, 300);
+            auto* newWin = new window::BasicWindow(e->title, 300, 100);
             app->addWindow(newWin);
         }
     };

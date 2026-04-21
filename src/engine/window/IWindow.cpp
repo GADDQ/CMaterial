@@ -10,6 +10,7 @@
 #include <glad/gl.h>
 
 #include "GLFW/glfw3.h"
+#include "engine/eventbus/EventBus.h"
 #include "imgui_internal.h"
 
 namespace cmaterial::window {
@@ -26,6 +27,7 @@ namespace cmaterial::window {
 
         glfwMakeContextCurrent(glfwWindow);
         ImGui::SetCurrentContext(imguiContext);
+        glfwSwapInterval(1);
 
         ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
         ImGui_ImplOpenGL3_Init("#version 330");
@@ -36,12 +38,12 @@ namespace cmaterial::window {
         io = &ImGui::GetIO();
     }
 
-    void IWindow::drawWindow() {
-        if (glfwWindowShouldClose(glfwWindow)) {
+    void IWindow::update() {
+        if (glfwWindowShouldClose(glfwWindow))
             isDead = true;
-            return;
-        }
+    }
 
+    void IWindow::drawWindow() {
         glfwMakeContextCurrent(glfwWindow);
         ImGui::SetCurrentContext(imguiContext);
 
@@ -49,8 +51,8 @@ namespace cmaterial::window {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::SetNextWindowSize(ImVec2(0, 0));
-        ImGui::SetNextWindowSize(io->DisplaySize); // this need fix
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(io->DisplaySize);
         this->render(io);
 
         ImGui::Render();
@@ -69,14 +71,15 @@ namespace cmaterial::window {
             components[comp->name] = comp;
     }
 
+    bool IWindow::isHovered() const {
+        return glfwGetWindowAttrib(glfwWindow, GLFW_HOVERED);
+    }
+
     IWindow::~IWindow() {
-        if (imguiContext) {
-            ImGui::SetCurrentContext(imguiContext);
-            ImGui_ImplOpenGL3_Shutdown();
-            ImGui_ImplGlfw_Shutdown();
-            ImGui::DestroyContext(imguiContext);
-        }
-        if (glfwWindow)
-            glfwDestroyWindow(glfwWindow);
+        ImGui::SetCurrentContext(imguiContext);
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext(imguiContext);
+        glfwDestroyWindow(glfwWindow);
     }
 }

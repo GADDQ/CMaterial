@@ -25,6 +25,7 @@ namespace cmaterial::window {
         void initialize(GLFWwindow* window, ImFontAtlas* fontAtlas);
         void drawWindow();
 
+        virtual void update();
         virtual void render(ImGuiIO* io) = 0;
         void addComponent(component::IComponent *comp);
 
@@ -32,6 +33,9 @@ namespace cmaterial::window {
         int width, height;
 
         bool isDead = false;
+        bool isInitialized = false;
+
+        bool isHovered() const;
 
     protected:
         GLFWwindow* glfwWindow = nullptr;

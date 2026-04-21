@@ -15,8 +15,8 @@ int main() {
 
     cmaterial::event::EventBus::addListener(new cmaterial::event::WindowLogic(&app));
 
-    cmaterial::window::BasicWindow* window1 = new cmaterial::window::BasicWindow("window1", 300, 150);
-    cmaterial::window::BasicWindow* window2 = new cmaterial::window::BasicWindow("window2", 300, 150);
+    cmaterial::window::BasicWindow* window1 = new cmaterial::window::BasicWindow("window1", 300, 100);
+    cmaterial::window::BasicWindow* window2 = new cmaterial::window::BasicWindow("window2", 300, 100);
 
     cmaterial::component::BasicButton* button1 = new cmaterial::component::BasicButton();
     button1->name = "buttonInWindow1";
