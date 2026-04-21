@@ -76,6 +76,7 @@ namespace cmaterial::window {
     }
 
     IWindow::~IWindow() {
+        glfwMakeContextCurrent(glfwWindow);
         ImGui::SetCurrentContext(imguiContext);
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
