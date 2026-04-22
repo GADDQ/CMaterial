@@ -22,8 +22,12 @@ namespace cmaterial::window {
 
     void IWindow::initialize(GLFWwindow *window, ImFontAtlas* fontAtlas) {
         glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+        glfwWindowHint(GLFW_DEPTH_BITS, 0);
+        glfwWindowHint(GLFW_STENCIL_BITS, 0);
+        glfwWindowHint(GLFW_SAMPLES, 0);
         glfwWindow = glfwCreateWindow(width, height, name.c_str(), nullptr, window);
         imguiContext = ImGui::CreateContext(fontAtlas);
+        this->fontAtlas = fontAtlas;
 
         glfwMakeContextCurrent(glfwWindow);
         ImGui::SetCurrentContext(imguiContext);
@@ -33,19 +37,29 @@ namespace cmaterial::window {
         ImGui_ImplOpenGL3_Init("#version 330");
 
         ImGui::StyleColorsDark();
-        ImGui::GetIO().IniFilename = nullptr;
-
         io = &ImGui::GetIO();
+
+        io->IniFilename = nullptr;
+        io->LogFilename = nullptr;
     }
 
     void IWindow::update() {
         if (glfwWindowShouldClose(glfwWindow))
             isDead = true;
+
+        ImGui::SetCurrentContext(imguiContext);
+
+        double mouse_x, mouse_y;
+        glfwGetCursorPos(glfwWindow, &mouse_x, &mouse_y);
+
+        ImGui::GetIO().AddMousePosEvent((float)mouse_x, (float)mouse_y);
     }
 
     void IWindow::drawWindow() {
         glfwMakeContextCurrent(glfwWindow);
         ImGui::SetCurrentContext(imguiContext);
+
+        ImFontAtlasUpdateNewFrame(fontAtlas, ++global_frame_count, true);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();

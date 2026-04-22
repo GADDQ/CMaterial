@@ -41,6 +41,8 @@ namespace cmaterial::window {
         GLFWwindow* glfwWindow = nullptr;
         ImGuiContext* imguiContext = nullptr;
         ImGuiIO* io = nullptr;
+        ImFontAtlas* fontAtlas = nullptr;
+        int global_frame_count = 0;
 
         std::unordered_map<std::string, component::IComponent *> components;
         std::vector<std::string> deadComponents;

@@ -8,6 +8,10 @@
 #include "IEvent.h"
 #include "IListener.h"
 
+#include <unordered_map>
+#include <mutex>
+#include <vector>
+
 namespace cmaterial::event {
     std::vector<IListener*> EventBus::registeredListeners;
     std::unordered_map<const void*, std::vector<IHandler*>> EventBus::subscriberMap;

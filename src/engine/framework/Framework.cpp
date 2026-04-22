@@ -6,8 +6,7 @@
 
 #include <glad/gl.h>
 #include "GLFW/glfw3.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
+#include "imgui_internal.h"
 #include "imgui.h"
 
 #ifdef _WIN32
@@ -16,7 +15,9 @@
 
 #include "engine/eventbus/EventBus.h"
 #include "engine/eventbus/internal/event/EmptyEvent.hpp"
-#include "imgui_internal.h"
+
+#include <unordered_map>
+#include <vector>
 
 using EventBus = cmaterial::event::EventBus;
 
@@ -56,15 +57,12 @@ namespace cmaterial {
         if (!isInitialized)
             return NOT_INIT;
 
-        int global_frame_count = 0;
-
         EventBus::postEvent(new event::internal::EmptyEvent);
         while (!glfwWindowShouldClose(hiddenWindow) && !windows.empty()) {
             if (!EventBus::dispatch())
                 glfwWaitEvents();
 
-            ImFontAtlasUpdateNewFrame(fontAtlas, ++global_frame_count, true);
-            for (std::pair<std::string, window::IWindow *> pair : windows) {
+            for (std::pair<const std::string, window::IWindow *> &pair : windows) {
                 pair.second->update();
 
                 if (pair.second->isDead) {

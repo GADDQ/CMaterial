@@ -6,7 +6,7 @@
 #define CMATERIAL_FRAMEWORK_H
 
 
-#include <unordered_map>
+#include "engine/utils/ordered_map.hpp"
 
 #include <glad/gl.h>
 #include "GLFW/glfw3.h"
@@ -37,7 +37,7 @@ namespace cmaterial {
 
         GLFWwindow* hiddenWindow = nullptr;
         ImFontAtlas* fontAtlas = nullptr;
-        std::unordered_map<std::string, window::IWindow*> windows;
+        std::unordered_map<std::string, window::IWindow *> windows;
         std::vector<std::string> deadWindows;
     };
 }
