@@ -79,7 +79,7 @@ namespace cmaterial {
                 pair.second->drawWindow();
             }
 
-            for (std::string name : deadWindows) {
+            for (std::string &name : deadWindows) {
                 window::IWindow* win = windows[name];
                 windows.erase(name);
                 delete win;
