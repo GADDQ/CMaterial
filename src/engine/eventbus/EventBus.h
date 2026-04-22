@@ -20,19 +20,23 @@ namespace cmaterial::event {
 
     class EventBus {
     public:
-        EventBus() = default;
         ~EventBus();
 
-        void subscribe(IListener* listener);
-        void post(IEvent* event);
-        void dispatch();
+        static void addListener(IListener* listener);
+        static void postEvent(IEvent* event);
+        static bool dispatch();
+
+        static void removeListener(IListener* listener);
+        static void shutdown();
 
     private:
-        std::vector<IListener*> registeredListeners;
-        std::unordered_map<const void*, std::vector<IHandler*>> subscriberMap;
+        static std::vector<IListener*> registeredListeners;
+        static std::unordered_map<const void*, std::vector<IHandler*>> subscriberMap;
 
-        std::vector<IEvent*> eventQueue ;
-        std::mutex queueMutex;
+        static std::mutex registerMutex;
+
+        static std::vector<IEvent*> eventQueue ;
+        static std::mutex queueMutex;
     };
 }
 

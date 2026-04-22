@@ -12,14 +12,9 @@
 
 
 namespace cmaterial::event {
-    class TestEvent : public IEvent {
-    public:
-        REGISTEREVENT(TestEvent)
-
-        TestEvent(std::string str) { test = str; }
-
-    protected:
-        std::string test;
+    struct SpawnWindowRequest : IEvent {
+        REGISTEREVENT(SpawnWindowRequest)
+        std::string title;
     };
 }
 

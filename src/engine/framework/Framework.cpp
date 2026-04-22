@@ -1,36 +1,27 @@
 //
-// Created by Earth_Studio on 2026/4/15.
+// Created by Earth_Studio on 2026/4/19.
 //
 
 #include "Framework.h"
 
 #include <glad/gl.h>
-#include <GLFW/glfw3.h>
-
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
+#include "GLFW/glfw3.h"
+#include "imgui_internal.h"
 #include "imgui.h"
-
-#include "engine/eventbus/IListener.h"
-
-#include "content/component/BasicWindow/BasicWindow.h"
-
-#include <string>
-#include <unordered_map>
-#include <vector>
 
 #ifdef _WIN32
 #include <mimalloc-new-delete.h>
 #endif
 
+#include "engine/eventbus/EventBus.h"
+#include "engine/eventbus/internal/event/EmptyEvent.hpp"
+
+#include <unordered_map>
+#include <vector>
+
+using EventBus = cmaterial::event::EventBus;
+
 namespace cmaterial {
-    Framework::Framework() {
-        initialized = false;
-
-        io = nullptr;
-        hidden_window = nullptr;
-    }
-
     Framework::error Framework::initialize() {
         if (!glfwInit())
             return GLFW_INIT_FAILED;
@@ -38,107 +29,74 @@ namespace cmaterial {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // disabled for debug only
 
-        hidden_window = glfwCreateWindow(1, 1, "Hidden", nullptr, nullptr);
-        if (!hidden_window) {
+        hiddenWindow = glfwCreateWindow(1, 1, "CMaterial Engine", nullptr, nullptr);
+        if (!hiddenWindow) {
             glfwTerminate();
             return GLFW_CREATE_WINDOW_FAILED;
         }
 
-        glfwMakeContextCurrent(hidden_window);
+        glfwMakeContextCurrent(hiddenWindow);
         glfwSwapInterval(1);
 
         if (!gladLoadGL(glfwGetProcAddress))
             return GLAD_LOAD_GL_FAILED;
 
         IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        io = &ImGui::GetIO();
-        io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-        io->ConfigViewportsNoAutoMerge = true;
-        io->IniFilename = nullptr;
+        fontAtlas = IM_NEW(ImFontAtlas)();
 
-        ImGui::StyleColorsDark();
-        ImGui_ImplGlfw_InitForOpenGL(hidden_window, true);
-        ImGui_ImplOpenGL3_Init("#version 330");
+        fontAtlas->AddFontDefault();
 
-        initialized = true;
+        isInitialized = true;
 
         return OK;
     }
 
     Framework::error Framework::run() {
-        if (!initialized)
+        if (!isInitialized)
             return NOT_INIT;
 
-        while (!glfwWindowShouldClose(hidden_window) && !components.empty()) {
-            glfwPollEvents();
+        EventBus::postEvent(new event::internal::EmptyEvent);
+        while (!glfwWindowShouldClose(hiddenWindow) && !windows.empty()) {
+            if (!EventBus::dispatch())
+                glfwWaitEvents();
 
-            eventBus.dispatch();
+            for (std::pair<const std::string, window::IWindow *> &pair : windows) {
+                pair.second->update();
 
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
-
-            for (std::pair<std::string, component::IComponent *> pair: components) {
-                if (pair.second->getIsDead()) {
-                    deadComponentNames.push_back(pair.first);
+                if (pair.second->isDead) {
+                    deadWindows.push_back(pair.first);
                     continue;
                 }
 
-                pair.second->render(io);
+                if (!pair.second->isHovered()) {
+                    if (!pair.second->isInitialized)
+                        pair.second->isInitialized = true;
+                    else continue;
+                }
+
+                pair.second->drawWindow();
             }
 
-            for (const std::string& deadComponentName: deadComponentNames) {
-                components.erase(deadComponentName);
+            for (std::string name : deadWindows) {
+                window::IWindow* win = windows[name];
+                windows.erase(name);
+                delete win;
             }
-
-            deadComponentNames.clear();
-
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-            if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-                GLFWwindow *backup_context = glfwGetCurrentContext();
-                ImGui::UpdatePlatformWindows();
-                ImGui::RenderPlatformWindowsDefault();
-                glfwMakeContextCurrent(backup_context);
-            }
-
-            glfwSwapBuffers(hidden_window);
         }
 
         return OK;
     }
 
-    void Framework::addComponent(component::IComponent *component) {
-        if (component == nullptr)
-            return;
-
-        if (component->name.empty())
-            return;
-
-        components.insert({component->name, component});
-    }
-
-    void Framework::addListener(event::IListener *listener) {
-        if (listener == nullptr)
-            return;
-
-        eventBus.subscribe(listener);
-    }
-
-    event::EventBus *Framework::getEventBus() {
-        return &eventBus;
+    void Framework::addWindow(window::IWindow *window) {
+        window->initialize(hiddenWindow, fontAtlas);
+        windows.insert({window->name, window});
     }
 
     Framework::~Framework() {
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
-        glfwDestroyWindow(hidden_window);
+        EventBus::shutdown();
+        glfwDestroyWindow(hiddenWindow);
         glfwTerminate();
     }
 }

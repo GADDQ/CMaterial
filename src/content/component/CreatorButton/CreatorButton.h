@@ -6,38 +6,28 @@
 #define CMATERIAL_CREATORBUTTON_H
 
 
-
-#include "content/component/BasicWindow/BasicWindow.h"
+#include "content/logic/event/SpawnWindowRequest.hpp"
 #include "engine/component/IComponent.h"
-#include "engine/framework/Framework.h"
-
-#include <memory>
+#include "engine/eventbus/EventBus.h"
 
 
 namespace cmaterial::component {
     class CreatorButton : public IComponent {
-        std::vector<std::unique_ptr<IComponent>> spawnedWindows;
-        Framework* app_context;
-
     public:
-        CreatorButton(Framework* app) : app_context(app) {}
+        using IComponent::IComponent;
 
         void render(ImGuiIO *io) override {
-            if (ImGui::Button("Spawn Window")) {
-                auto newWin = std::make_unique<BasicWindow>();
-                newWin->name = "Dynamic " + std::to_string(spawnedWindows.size());
+            if (ImGui::Button("SpawnWindow")) {
+                static int count = 0;
+                auto* req = new event::SpawnWindowRequest();
+                req->title = "Dynamic Window " + std::to_string(++count);
 
-                app_context->addComponent(newWin.get());
-
-                spawnedWindows.push_back(std::move(newWin));
+                event::EventBus::postEvent(req);
             }
-
-            std::erase_if(spawnedWindows, [](const auto& win) {
-                return win->getIsDead();
-            });
         }
     };
 }
+
 
 
 
