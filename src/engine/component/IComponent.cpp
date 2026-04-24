@@ -6,6 +6,7 @@
 
 #include "GLFW/glfw3.h"
 #include "engine/eventbus/EventBus.h"
+#include "engine/eventbus/internal/event/EmptyEvent.hpp"
 
 namespace cmaterial::component {
     void IComponent::addComponent(IComponent *component) {
@@ -16,7 +17,7 @@ namespace cmaterial::component {
             return;
 
         components.insert({component->name, component});
-        glfwPostEmptyEvent();
+        event::EventBus::postEvent(new event::internal::EmptyEvent);
     }
 
     bool IComponent::getIsDead() {

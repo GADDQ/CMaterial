@@ -54,17 +54,21 @@ namespace cmaterial::event {
             processingQueue.swap(eventQueue);
         }
 
-        std::lock_guard<std::mutex> lock(registerMutex);
-
         for (auto* event : processingQueue) {
             const void* type = event->getEventType();
+
+            std::vector<IHandler*> handlersToCall;
+
+            std::lock_guard<std::mutex> lock(registerMutex);
             if (subscriberMap.contains(type)) {
-                for (auto* handler : subscriberMap[type]) {
-                    // 支持取消逻辑
-                    if (event->getIsCancelled()) break;
-                    handler->execute(event);
-                }
+                handlersToCall = subscriberMap[type];
             }
+
+            for (auto* handler : handlersToCall) {
+                if (event->getIsCancelled()) break;
+                handler->execute(event);
+            }
+
             delete event;
         }
 
@@ -101,6 +105,7 @@ namespace cmaterial::event {
         for (IListener* listener : registeredListeners) {
             delete listener;
         }
+        registeredListeners.clear();
     }
 
     EventBus::~EventBus() {
