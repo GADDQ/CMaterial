@@ -10,6 +10,7 @@
 #include "imgui.h"
 
 #include <unordered_map>
+#include <vector>
 #include <string>
 
 #include "ILayer.h"
