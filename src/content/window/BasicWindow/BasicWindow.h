@@ -5,7 +5,6 @@
 #ifndef CMATERIAL_BASICWINDOW_H
 #define CMATERIAL_BASICWINDOW_H
 
-#include "engine/component/IComponent.h"
 #include "engine/window/IWindow.h"
 #include "imgui.h"
 
