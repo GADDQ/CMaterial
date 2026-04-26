@@ -47,7 +47,9 @@ file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS
 add_executable(CMaterial
         src/main.cpp
         src/main.h
+
         src/gl.c
+
         include/imgui/imgui.cpp
         include/imgui/imgui_draw.cpp
         include/imgui/imgui_tables.cpp
@@ -95,6 +97,7 @@ if(MSVC AND CMAKE_BUILD_TYPE MATCHES "Release")
     )
 
     set_target_properties(CMaterial PROPERTIES LINK_FLAGS "/INCLUDE:malloc")
+    target_sources(CMaterial PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/version.rc)
 
 elseif((CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang") AND CMAKE_BUILD_TYPE MATCHES "Release")
     target_compile_options(CMaterial PRIVATE
