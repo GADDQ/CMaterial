@@ -102,6 +102,8 @@ namespace cmaterial::event {
         for (auto* e : eventQueue) delete e;
         eventQueue.clear();
 
+        subscriberMap.clear();
+
         for (IListener* listener : registeredListeners) {
             delete listener;
         }
