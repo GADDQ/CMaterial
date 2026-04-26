@@ -1,0 +1,42 @@
+//
+// Created by Earth_Studio on 2026/4/26.
+//
+
+#include <windows.h>   // 需要的宏定义
+
+// 语言和字符集
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(65001)
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+FILEFLAGS       VS_FF_DEBUG
+#else
+FILEFLAGS       0
+#endif
+FILEOS          VOS__WINDOWS32
+FILETYPE        VFT_APP
+FILESUBTYPE     0
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"   // 英文 (美国) Unicode
+        BEGIN
+            VALUE "CompanyName", "Earth Studio"
+            VALUE "FileDescription", "CMaterial Demo"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "CMaterialEngine"
+            VALUE "LegalCopyright", "Copyright (C) 2026, Earth Studio"
+            VALUE "OriginalFilename", "CMaterial.exe"
+            VALUE "ProductName", "CMaterial Demo"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 0x04E4   // 英语美国 , 多字节->Unicode
+    END
+END

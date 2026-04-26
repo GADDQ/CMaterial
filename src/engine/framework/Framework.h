@@ -32,8 +32,10 @@ namespace cmaterial {
 
     private:
         bool isInitialized = false;
+        int globalFrameCount = 0;
 
         GLFWwindow* hiddenWindow = nullptr;
+        ImGuiContext* hiddenImgui = nullptr;
         ImFontAtlas* fontAtlas = nullptr;
         std::unordered_map<std::string, window::IWindow *> windows;
         std::vector<std::string> deadWindows;

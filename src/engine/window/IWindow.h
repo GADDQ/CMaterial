@@ -23,8 +23,10 @@ namespace cmaterial::window {
         virtual ~IWindow();
 
         void initialize(GLFWwindow* window, ImFontAtlas* fontAtlas);
-        void drawWindow();
+        void drawWindow(bool isVirtual); // isVirtual: Is only force ImGui update private states?
 
+        virtual void postInit(ImGuiIO *io) {};
+        virtual void postUpdate() {};
         virtual void update();
         virtual void render(ImGuiIO* io) = 0;
         void addComponent(component::IComponent *comp);
@@ -35,6 +37,8 @@ namespace cmaterial::window {
         bool isDead = false;
         bool isInitialized = false;
 
+        bool _isSizeChange = false;
+
         bool isHovered() const;
 
     protected:
@@ -42,7 +46,6 @@ namespace cmaterial::window {
         ImGuiContext* imguiContext = nullptr;
         ImGuiIO* io = nullptr;
         ImFontAtlas* fontAtlas = nullptr;
-        int global_frame_count = 0;
 
         std::unordered_map<std::string, component::IComponent *> components;
         std::vector<std::string> deadComponents;

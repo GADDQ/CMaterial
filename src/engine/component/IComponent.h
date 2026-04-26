@@ -10,7 +10,10 @@
 #include "imgui.h"
 
 #include <unordered_map>
+#include <vector>
 #include <string>
+
+#include "ILayer.h"
 
 
 namespace cmaterial::component {
@@ -19,6 +22,8 @@ namespace cmaterial::component {
         virtual ~IComponent() = default;
         virtual void render(ImGuiIO *io) = 0;
         virtual void addComponent(IComponent *component);
+
+        void addLayer();
 
         bool getIsDead();
 
@@ -30,6 +35,7 @@ namespace cmaterial::component {
     protected:
         bool isDead = false;
         std::unordered_map<std::string, IComponent *> components;
+        std::vector<ILayer *> layers;
     };
 }
 

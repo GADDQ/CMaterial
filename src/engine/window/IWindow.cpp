@@ -11,9 +11,19 @@
 
 #include "GLFW/glfw3.h"
 #include "engine/eventbus/EventBus.h"
+#include "engine/eventbus/internal/event/EmptyEvent.hpp"
 #include "imgui_internal.h"
 
 namespace cmaterial::window {
+    void window_size_callback(GLFWwindow* window, int width, int height) {
+        auto* instance = static_cast<IWindow*>(glfwGetWindowUserPointer(window));
+
+        if (instance) {
+            glfwPostEmptyEvent();
+            instance->_isSizeChange = true;
+        }
+    }
+
     IWindow::IWindow(const std::string &name, int width, int height) {
         this->name = name;
         this->width = width;
@@ -33,6 +43,16 @@ namespace cmaterial::window {
         ImGui::SetCurrentContext(imguiContext);
         glfwSwapInterval(1);
 
+        glfwSetWindowUserPointer(glfwWindow, this);
+        glfwSetWindowSizeCallback(glfwWindow, window_size_callback);
+
+        glfwSetWindowRefreshCallback(glfwWindow, [](GLFWwindow *w) {
+            auto *win = (IWindow *) glfwGetWindowUserPointer(w);
+            if (win) {
+                win->drawWindow(false);
+            }
+        });
+
         ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
         ImGui_ImplOpenGL3_Init("#version 330");
 
@@ -41,6 +61,8 @@ namespace cmaterial::window {
 
         io->IniFilename = nullptr;
         io->LogFilename = nullptr;
+
+        postInit(io);
     }
 
     void IWindow::update() {
@@ -53,31 +75,39 @@ namespace cmaterial::window {
         glfwGetCursorPos(glfwWindow, &mouse_x, &mouse_y);
 
         ImGui::GetIO().AddMousePosEvent((float)mouse_x, (float)mouse_y);
+
+        _isSizeChange = false;
+
+        postUpdate();
     }
 
-    void IWindow::drawWindow() {
-        glfwMakeContextCurrent(glfwWindow);
+    void IWindow::drawWindow(bool isVirtual) {
+        if (!isVirtual)
+            glfwMakeContextCurrent(glfwWindow);
+
         ImGui::SetCurrentContext(imguiContext);
 
-        ImFontAtlasUpdateNewFrame(fontAtlas, ++global_frame_count, true);
-
-        ImGui_ImplOpenGL3_NewFrame();
+        if (!isVirtual)
+            ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
         ImGui::SetNextWindowPos(ImVec2(0, 0));
         ImGui::SetNextWindowSize(io->DisplaySize);
+
         this->render(io);
 
         ImGui::Render();
 
-        int dw, dh;
-        glfwGetFramebufferSize(glfwWindow, &dw, &dh);
-        glViewport(0, 0, dw, dh);
-        glClear(GL_COLOR_BUFFER_BIT);
+        if (!isVirtual) {
+            int dw, dh;
+            glfwGetFramebufferSize(glfwWindow, &dw, &dh);
+            glViewport(0, 0, dw, dh);
+            glClear(GL_COLOR_BUFFER_BIT);
 
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glfwSwapBuffers(glfwWindow);
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+            glfwSwapBuffers(glfwWindow);
+        }
     }
 
     void IWindow::addComponent(component::IComponent* comp) {

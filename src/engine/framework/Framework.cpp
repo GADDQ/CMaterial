@@ -19,6 +19,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "engine/animation/Player.h"
+
 using EventBus = cmaterial::event::EventBus;
 
 namespace cmaterial {
@@ -29,7 +31,7 @@ namespace cmaterial {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // disabled for debug only
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
         hiddenWindow = glfwCreateWindow(1, 1, "CMaterial Engine", nullptr, nullptr);
         if (!hiddenWindow) {
@@ -43,10 +45,11 @@ namespace cmaterial {
         if (!gladLoadGL(glfwGetProcAddress))
             return GLAD_LOAD_GL_FAILED;
 
-        IMGUI_CHECKVERSION();
         fontAtlas = IM_NEW(ImFontAtlas)();
-
         fontAtlas->AddFontDefault();
+
+        hiddenImgui = ImGui::CreateContext(fontAtlas);
+        ImGui::SetCurrentContext(hiddenImgui);
 
         isInitialized = true;
 
@@ -59,10 +62,16 @@ namespace cmaterial {
 
         EventBus::postEvent(new event::internal::EmptyEvent);
         while (!glfwWindowShouldClose(hiddenWindow) && !windows.empty()) {
-            if (!EventBus::dispatch())
+            bool isEventBusy = EventBus::dispatch();
+            bool isAnimationBusy = animation::Player::update();
+
+            if (!(isEventBusy || isAnimationBusy))
                 glfwWaitEvents();
 
+            ImFontAtlasUpdateNewFrame(fontAtlas, ++globalFrameCount, true);
+
             for (std::pair<const std::string, window::IWindow *> &pair : windows) {
+                bool isSizeChange = pair.second->_isSizeChange;
                 pair.second->update();
 
                 if (pair.second->isDead) {
@@ -70,13 +79,18 @@ namespace cmaterial {
                     continue;
                 }
 
-                if (!pair.second->isHovered()) {
+                if (!isSizeChange && !pair.second->isHovered()) {
                     if (!pair.second->isInitialized)
                         pair.second->isInitialized = true;
                     else continue;
                 }
 
-                pair.second->drawWindow();
+                pair.second->drawWindow(!isAnimationBusy);
+            }
+
+            if (!deadWindows.empty()) {
+                glfwMakeContextCurrent(hiddenWindow);
+                ImGui::SetCurrentContext(hiddenImgui);
             }
 
             for (std::string &name : deadWindows) {
@@ -96,6 +110,10 @@ namespace cmaterial {
 
     Framework::~Framework() {
         EventBus::shutdown();
+        animation::Player::shutdown();
+        glfwMakeContextCurrent(hiddenWindow);
+        ImGui::SetCurrentContext(hiddenImgui);
+        ImGui::DestroyContext(hiddenImgui);
         glfwDestroyWindow(hiddenWindow);
         glfwTerminate();
     }
