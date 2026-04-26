@@ -71,7 +71,12 @@ namespace cmaterial::animation {
         return true;
     }
 
-    Player::~Player() {
+    void Player::shutdown() {
         playingAnimations.clear();
+        finishedAnimations.clear();
+    }
+
+    Player::~Player() {
+        shutdown();
     }
 }

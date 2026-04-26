@@ -23,6 +23,8 @@ namespace cmaterial::animation {
 
         static bool update();
 
+        static void shutdown();
+
     private:
         static std::vector<IAnimation *> playingAnimations;
         static std::vector<IAnimation *> finishedAnimations;
