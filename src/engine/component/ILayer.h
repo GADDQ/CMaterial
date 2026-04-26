@@ -1,0 +1,25 @@
+//
+// Created by Earth_Studio on 2026/4/26.
+//
+
+#ifndef CMATERIAL_ILAYER_H
+#define CMATERIAL_ILAYER_H
+
+
+#include "imgui.h"
+
+
+namespace cmaterial::component {
+    class ILayer {
+    public:
+        virtual ~ILayer() = default;
+
+        virtual ImDrawData render() = 0;
+
+        int priority = 0;
+    };
+}
+
+
+
+#endif //CMATERIAL_ILAYER_H
