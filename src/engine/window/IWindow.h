@@ -40,6 +40,7 @@ namespace cmaterial::window {
         bool isDead = false;
         bool isInitialized = false;
         ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings;
+        ImVec4 backgroundColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
         bool _isSizeChange = false;
 

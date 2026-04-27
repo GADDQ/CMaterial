@@ -107,6 +107,8 @@ namespace cmaterial::window {
             ImGui::PushStyleVar(style.first, style.second);
         }
 
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, backgroundColor);
+
         if (ImGui::Begin(this->name.c_str(), nullptr, windowFlags)) {
             this->render(io);
 
@@ -128,9 +130,8 @@ namespace cmaterial::window {
         }
         ImGui::End();
 
-        for (int i = 0; i < styles.size(); i++) {
-            ImGui::PopStyleVar();
-        }
+        ImGui::PopStyleColor();
+        ImGui::PopStyleVar(styles.size());
 
         ImGui::Render();
 
