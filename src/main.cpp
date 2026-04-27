@@ -11,7 +11,6 @@
 
 int main() {
     // Before you start to write application, you must initialize the Framework first:
-
     cmaterial::Framework app;
     app.initialize();
 
