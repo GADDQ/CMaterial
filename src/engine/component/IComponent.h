@@ -9,7 +9,6 @@
 
 #include "imgui.h"
 
-#include <unordered_map>
 #include <vector>
 #include <string>
 
@@ -19,13 +18,16 @@
 namespace cmaterial::component {
     class IComponent {
     public:
-        virtual ~IComponent() = default;
+        virtual ~IComponent();
         virtual void render(ImGuiIO *io) = 0;
-        virtual void addComponent(IComponent *component);
+        virtual void drawComponent(ImGuiIO *io);
 
-        void addLayer();
+        void addComponent(IComponent *component);
+        void removeComponent(IComponent *component);
+        void addLayer(ILayer *layer);
+        void removeLayer(ILayer *layer);
 
-        bool getIsDead();
+        bool getIsDead() const;
 
         std::string name;
         int xPercent = 0;
@@ -34,8 +36,9 @@ namespace cmaterial::component {
 
     protected:
         bool isDead = false;
-        std::unordered_map<std::string, IComponent *> components;
-        std::vector<ILayer *> layers;
+        std::vector<IComponent *> components;
+        std::vector<ILayer *> layersBefore;
+        std::vector<ILayer *> layersAfter;
     };
 }
 

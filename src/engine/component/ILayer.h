@@ -14,7 +14,7 @@ namespace cmaterial::component {
     public:
         virtual ~ILayer() = default;
 
-        virtual ImDrawData render() = 0;
+        virtual void render(ImDrawList* drawList, ImVec2 startPos, ImVec2 size) = 0;
 
         int priority = 0;
     };

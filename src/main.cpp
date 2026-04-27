@@ -2,6 +2,7 @@
 // Created by Earth_Studio on 2026/4/12.
 //
 
+#include "content/component/AnimationButton/AnimationButton.h"
 #include "engine/framework/Framework.h"
 
 #include "content/component/BasicButton/BasicButton.h"
@@ -27,9 +28,13 @@ int main() {
     cmaterial::component::CreatorButton* button2 = new cmaterial::component::CreatorButton();
     button2->name = "buttonInWindow2";
 
+    cmaterial::component::AnimationButton* md3Button = new cmaterial::component::AnimationButton();
+    md3Button->name = "MD3 Button";
+
     // To inject components in an exist window:
     app.addWindow(window1);
     window1->addComponent(button1);
+    window1->addComponent(md3Button);
 
     app.addWindow(window2);
     window2->addComponent(button2);
