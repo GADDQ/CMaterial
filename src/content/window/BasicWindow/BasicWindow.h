@@ -14,6 +14,7 @@ namespace cmaterial::window {
         using IWindow::IWindow;
         ~BasicWindow() = default;
 
+        void postInit(ImGuiIO *io) override;
         void render(ImGuiIO *io) override;
     };
 }

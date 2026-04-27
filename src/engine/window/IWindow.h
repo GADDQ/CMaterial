@@ -28,14 +28,18 @@ namespace cmaterial::window {
         virtual void postInit(ImGuiIO *io) {};
         virtual void postUpdate() {};
         virtual void update();
-        virtual void render(ImGuiIO* io) = 0;
+        virtual void render(ImGuiIO* io) {};
+
         void addComponent(component::IComponent *comp);
+        void addStyle(ImGuiStyleVar styleVar, float value);
+        void removeStyle(ImGuiStyleVar styleVar);
 
         std::string name;
         int width, height;
 
         bool isDead = false;
         bool isInitialized = false;
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings;
 
         bool _isSizeChange = false;
 
@@ -49,6 +53,7 @@ namespace cmaterial::window {
 
         std::unordered_map<std::string, component::IComponent *> components;
         std::vector<std::string> deadComponents;
+        std::unordered_map<ImGuiStyleVar, float> styles;
     };
 }
 

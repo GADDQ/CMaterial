@@ -81,6 +81,14 @@ namespace cmaterial::window {
         postUpdate();
     }
 
+    void IWindow::addStyle(ImGuiStyleVar styleVar, float value) {
+        styles[styleVar] = value;
+    }
+
+    void IWindow::removeStyle(ImGuiStyleVar styleVar) {
+        styles.erase(styleVar);
+    }
+
     void IWindow::drawWindow(bool isVirtual) {
         if (!isVirtual)
             glfwMakeContextCurrent(glfwWindow);
@@ -95,7 +103,34 @@ namespace cmaterial::window {
         ImGui::SetNextWindowPos(ImVec2(0, 0));
         ImGui::SetNextWindowSize(io->DisplaySize);
 
-        this->render(io);
+        for (auto style : styles) {
+            ImGui::PushStyleVar(style.first, style.second);
+        }
+
+        if (ImGui::Begin(this->name.c_str(), nullptr, windowFlags)) {
+            this->render(io);
+
+            for (auto &pair: components) {
+                if (pair.second->getIsDead()) {
+                    deadComponents.push_back(pair.first);
+                    continue;
+                }
+                pair.second->drawComponent(io);
+            }
+
+            for (const std::string &name: deadComponents) {
+                component::IComponent *component = components[name];
+                components.erase(name);
+                delete component;
+            }
+
+            deadComponents.clear();
+        }
+        ImGui::End();
+
+        for (int i = 0; i < styles.size(); i++) {
+            ImGui::PopStyleVar();
+        }
 
         ImGui::Render();
 
