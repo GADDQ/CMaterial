@@ -98,6 +98,8 @@ namespace cmaterial {
                 windows.erase(name);
                 delete win;
             }
+
+            deadWindows.clear();
         }
 
         return OK;
