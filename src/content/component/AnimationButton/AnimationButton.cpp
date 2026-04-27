@@ -11,6 +11,8 @@ namespace cmaterial::component {
     }
 
     void AnimationButton::render(ImGuiIO *io) {
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
         ImGui::Button(name.c_str());
+        ImGui::PopStyleColor();
     }
 } // namespace cmaterial::component
