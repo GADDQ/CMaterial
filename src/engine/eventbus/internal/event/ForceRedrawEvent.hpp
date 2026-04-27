@@ -8,8 +8,8 @@
 
 
 namespace cmaterial::event::internal {
-    struct EmptyEvent : IEvent {
-        REGISTEREVENT(EmptyEvent);
+    struct ForceRedrawEvent : IEvent {
+        REGISTEREVENT(ForceRedrawEvent);
     };
 }
 

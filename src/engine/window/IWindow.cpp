@@ -11,7 +11,7 @@
 
 #include "GLFW/glfw3.h"
 #include "engine/eventbus/EventBus.h"
-#include "engine/eventbus/internal/event/EmptyEvent.hpp"
+#include "engine/eventbus/internal/event/ForceRedrawEvent.hpp"
 #include "imgui_internal.h"
 
 namespace cmaterial::window {

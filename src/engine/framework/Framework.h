@@ -33,6 +33,7 @@ namespace cmaterial {
     private:
         bool isInitialized = false;
         int globalFrameCount = 0;
+        bool isForceRedraw = false;
 
         GLFWwindow* hiddenWindow = nullptr;
         ImGuiContext* hiddenImgui = nullptr;

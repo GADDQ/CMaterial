@@ -14,12 +14,13 @@
 #endif
 
 #include "engine/eventbus/EventBus.h"
-#include "engine/eventbus/internal/event/EmptyEvent.hpp"
+#include "engine/eventbus/internal/event/ForceRedrawEvent.hpp"
 
 #include <unordered_map>
 #include <vector>
 
 #include "engine/animation/Player.h"
+#include "engine/eventbus/internal/listener/ForceRedrawListener.hpp"
 
 using EventBus = cmaterial::event::EventBus;
 
@@ -51,6 +52,8 @@ namespace cmaterial {
         hiddenImgui = ImGui::CreateContext(fontAtlas);
         ImGui::SetCurrentContext(hiddenImgui);
 
+        EventBus::addListener(new event::internal::ForceRedrawListener(&isForceRedraw));
+
         isInitialized = true;
 
         return OK;
@@ -60,7 +63,7 @@ namespace cmaterial {
         if (!isInitialized)
             return NOT_INIT;
 
-        EventBus::postEvent(new event::internal::EmptyEvent);
+        EventBus::postEvent(new event::internal::ForceRedrawEvent);
         while (!glfwWindowShouldClose(hiddenWindow) && !windows.empty()) {
             bool isEventBusy = EventBus::dispatch();
             bool isAnimationBusy = animation::Player::update();
@@ -85,7 +88,7 @@ namespace cmaterial {
                     else continue;
                 }
 
-                pair.second->drawWindow(!isAnimationBusy);
+                pair.second->drawWindow(!(isForceRedraw || isAnimationBusy));
             }
 
             if (!deadWindows.empty()) {
@@ -100,6 +103,7 @@ namespace cmaterial {
             }
 
             deadWindows.clear();
+            isForceRedraw = false;
         }
 
         return OK;

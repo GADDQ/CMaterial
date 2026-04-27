@@ -18,7 +18,7 @@ namespace cmaterial::event {
     public:
         WindowLogic(Framework* a) : app(a) {}
 
-        EVENTHANDLER(cmaterial::event::SpawnWindowRequest, onSpawnRequest)
+        EVENTHANDLER(SpawnWindowRequest, onSpawnRequest)
         void onSpawnRequest(SpawnWindowRequest* e) {
             auto* newWin = new window::BasicWindow(e->title, 300, 100);
             app->addWindow(newWin);
