@@ -14,6 +14,10 @@ namespace cmaterial::animation {
     void Player::play(IAnimation *animation) {
         if (!animation) return;
 
+        if (std::find(playingAnimations.begin(), playingAnimations.end(), animation) != playingAnimations.end()) {
+            return;
+        }
+
         playingAnimations.push_back(animation);
     }
 
@@ -49,9 +53,16 @@ namespace cmaterial::animation {
             for (auto binder : *animation->getAnimationBinders()) {
                 *binder.first = binder.second->step(dtTime);
 
-                if (!binder.second->isFinished()) {
-                    allTweensFinished = false;
+                if (!animation->_isReverse) {
+                    if (!binder.second->isFinished()) {
+                        allTweensFinished = false;
+                    }
+                } else {
+                    if (binder.second->progress() != 0) {
+                        allTweensFinished = false;
+                    }
                 }
+
             }
 
             if (allTweensFinished) {

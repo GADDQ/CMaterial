@@ -8,15 +8,15 @@
 
 #include "engine/component/IComponent.h"
 
-#include "layers/BackgroundLayer.h"
-#include "layers/OverlayLayer.h"
+#include "layer/BackgroundLayer.h"
+#include "layer/OverlayLayer.h"
 
 
 namespace cmaterial::component {
-    class AnimationButton : public IComponent {
+    class MultiLayerButton : public IComponent {
     public:
-        AnimationButton();
-        ~AnimationButton() = default;
+        MultiLayerButton();
+        ~MultiLayerButton() = default;
 
         void render(ImGuiIO *io) override;
 

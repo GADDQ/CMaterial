@@ -63,8 +63,6 @@ namespace cmaterial::component {
         ImDrawListSplitter splitter;
         splitter.Split(drawList, 3);
 
-        ImVec2 startPos = ImGui::GetCursorScreenPos();
-
         splitter.SetCurrentChannel(drawList, 1);
 
         ImGui::BeginGroup();

@@ -13,9 +13,7 @@
 
 namespace cmaterial::window {
     void BasicWindow::postInit(ImGuiIO *io) {
-        addStyle(ImGuiStyleVar_FrameRounding, 10.0f);
         addStyle(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        addStyle(ImGuiStyleVar_FrameBorderSize, 1.0f);
     }
 
     void BasicWindow::render(ImGuiIO *io) {

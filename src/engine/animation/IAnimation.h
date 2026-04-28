@@ -22,7 +22,7 @@ namespace cmaterial::animation {
         bool isLoop = false;
         bool _isReverse = false;
 
-    private:
+    protected:
         void bind(double* property, tweeny::tween<double>* tween);
 
         std::unordered_map<double *, tweeny::tween<double> *> animationBinders;

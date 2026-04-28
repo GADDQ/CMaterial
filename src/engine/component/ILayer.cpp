@@ -4,6 +4,10 @@
 
 #include "ILayer.h"
 
-namespace cmaterial::component {
+#include "IComponent.h"
 
+namespace cmaterial::component {
+    void ILayer::setParent(IComponent *parent) {
+        this->parent = parent;
+    }
 }
