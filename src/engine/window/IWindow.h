@@ -13,6 +13,7 @@
 #include "GLFW/glfw3.h"
 
 #include "engine/component/IComponent.h"
+#include "engine/utils/ordered_map.hpp"
 #include "imgui.h"
 
 
@@ -52,7 +53,7 @@ namespace cmaterial::window {
         ImGuiIO* io = nullptr;
         ImFontAtlas* fontAtlas = nullptr;
 
-        std::unordered_map<std::string, component::IComponent *> components;
+        utils::ordered_map<std::string, component::IComponent *> components;
         std::vector<std::string> deadComponents;
         std::unordered_map<ImGuiStyleVar, float> styles;
     };

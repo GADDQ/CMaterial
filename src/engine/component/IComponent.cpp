@@ -12,6 +12,8 @@
 
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
+#include "engine/utils/ordered_map.hpp"
 
 namespace cmaterial::component {
     void IComponent::addComponent(IComponent *component) {

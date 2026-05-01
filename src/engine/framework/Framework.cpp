@@ -16,7 +16,7 @@
 #include "engine/eventbus/EventBus.h"
 #include "engine/eventbus/internal/event/ForceRedrawEvent.hpp"
 
-#include <unordered_map>
+#include "engine/utils/ordered_map.hpp"
 #include <vector>
 
 #include "engine/animation/Player.h"

@@ -8,6 +8,7 @@
 
 #include <glad/gl.h>
 #include "GLFW/glfw3.h"
+#include "engine/utils/ordered_map.hpp"
 
 #include "engine/window/IWindow.h"
 
@@ -38,7 +39,7 @@ namespace cmaterial {
         GLFWwindow* hiddenWindow = nullptr;
         ImGuiContext* hiddenImgui = nullptr;
         ImFontAtlas* fontAtlas = nullptr;
-        std::unordered_map<std::string, window::IWindow *> windows;
+        utils::ordered_map<std::string, window::IWindow *> windows;
         std::vector<std::string> deadWindows;
     };
 }
