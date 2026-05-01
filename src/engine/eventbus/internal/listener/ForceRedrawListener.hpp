@@ -10,7 +10,7 @@
 #include "engine/eventbus/internal/event/ForceRedrawEvent.hpp"
 
 #include "glad/gl.h"
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 
 namespace cmaterial::event::internal {
     class ForceRedrawListener : public IListener {
