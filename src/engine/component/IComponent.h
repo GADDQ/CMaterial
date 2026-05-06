@@ -17,7 +17,7 @@
 
 
 namespace cmaterial::component {
-    class IComponent : public camterial::utils::INode {
+    class IComponent : public cmaterial::utils::INode {
     public:
         virtual ~IComponent();
 

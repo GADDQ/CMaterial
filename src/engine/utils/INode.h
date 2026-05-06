@@ -6,7 +6,7 @@
 #define CMATERIAL_INODE_H
 
 
-namespace camterial::utils {
+namespace cmaterial::utils {
     class INode{
     public:
         virtual ~INode() = default;

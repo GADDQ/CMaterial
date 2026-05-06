@@ -18,7 +18,7 @@
 
 
 namespace cmaterial::window {
-    class IWindow : public camterial::utils::INode {
+    class IWindow : public cmaterial::utils::INode {
     public:
         IWindow(const std::string &name, int width, int height);
         virtual ~IWindow();

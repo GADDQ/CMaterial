@@ -4,6 +4,8 @@
 
 #include "Button.h"
 
+#include <iostream>
+
 #include "engine/animation/Player.h"
 #include "engine/eventbus/EventBus.h"
 #include "engine/eventbus/internal/event/ForceRedrawEvent.hpp"
@@ -29,7 +31,6 @@ namespace cmaterial::component::material {
         ImGui::InvisibleButton(name.c_str(), buttonSize);
 
         bool isHovered = ImGui::IsItemHovered();
-        bool isClicked = ImGui::IsItemClicked();
 
         // 💡 状态机：处理 Hover 动画的平滑正反转
         if (isHovered != lastHoverState) {
@@ -44,14 +45,14 @@ namespace cmaterial::component::material {
         }
 
         // 💡 状态机：处理 Ripple 动画的爆炸
-        if (isClicked) {
+        if (ImGui::IsItemClicked()) {
+            std::cout << "clicked" << std::endl;
             rippleCenter = io->MousePos;
             // 计算对角线作为最大半径，保证波纹填满按钮
             double maxR = std::sqrt(buttonSize.x * buttonSize.x + buttonSize.y * buttonSize.y);
             rippleAnim.setMaxRadius(maxR);
             rippleAnim.reset(); // 回归 0
             animation::Player::play(&rippleAnim);
-            event::EventBus::postEvent(new event::internal::ForceRedrawEvent);
         }
     }
 

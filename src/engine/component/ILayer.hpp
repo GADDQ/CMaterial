@@ -13,7 +13,7 @@
 namespace cmaterial::component {
     class IComponent;
 
-    class ILayer : public camterial::utils::INode {
+    class ILayer : public cmaterial::utils::INode {
     public:
         ILayer() = default;
         virtual ~ILayer() = default;

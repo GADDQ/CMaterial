@@ -11,8 +11,6 @@
 
 #include "GLFW/glfw3.h"
 #include "engine/eventbus/EventBus.h"
-#include "engine/eventbus/internal/event/ForceRedrawEvent.hpp"
-#include "imgui_internal.h"
 
 namespace cmaterial::window {
     void window_size_callback(GLFWwindow* window, int width, int height) {
