@@ -5,7 +5,7 @@
 #include "IEvent.h"
 
 namespace cmaterial::event {
-    bool IEvent::getIsCancelled() {
+    bool IEvent::getIsCancelled() const {
         return isCancelled;
     }
 }

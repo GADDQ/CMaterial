@@ -12,7 +12,7 @@ namespace cmaterial::event {
         virtual ~IEvent() = default;
         virtual const void* getEventType() const = 0;
 
-        bool getIsCancelled();
+        bool getIsCancelled() const;
 
     protected:
         bool isCancelled = false;
