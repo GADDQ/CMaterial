@@ -4,11 +4,8 @@
 
 #include "Button.h"
 
-#include <iostream>
-
 #include "engine/animation/Player.h"
 #include "engine/eventbus/EventBus.h"
-#include "engine/eventbus/internal/event/ForceRedrawEvent.hpp"
 
 namespace cmaterial::component::material {
     Button::Button()
@@ -46,7 +43,6 @@ namespace cmaterial::component::material {
 
         // 💡 状态机：处理 Ripple 动画的爆炸
         if (ImGui::IsItemClicked()) {
-            std::cout << "clicked" << std::endl;
             rippleCenter = io->MousePos;
             // 计算对角线作为最大半径，保证波纹填满按钮
             double maxR = std::sqrt(buttonSize.x * buttonSize.x + buttonSize.y * buttonSize.y);
