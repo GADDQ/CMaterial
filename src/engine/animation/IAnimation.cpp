@@ -6,6 +6,7 @@
 
 #include <unordered_map>
 
+#include "Player.h"
 #include "tween.h"
 
 namespace cmaterial::animation {
@@ -28,5 +29,6 @@ namespace cmaterial::animation {
 
     IAnimation::~IAnimation() {
         animationBinders.clear();
+        Player::stop(this);
     }
 }

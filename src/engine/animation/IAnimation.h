@@ -13,7 +13,7 @@
 
 
 namespace cmaterial::animation {
-    class IAnimation : public camterial::utils::INode {
+    class IAnimation : public cmaterial::utils::INode {
     public:
         virtual ~IAnimation();
 
