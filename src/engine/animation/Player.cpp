@@ -41,10 +41,7 @@ namespace cmaterial::animation {
         std::erase(playingAnimations, animation);
     }
 
-    bool Player::update() {
-        if (playingAnimations.empty())
-            return false;
-
+    std::vector<IAnimation *>* Player::update() {
         int dtTime = static_cast<int>(ImGui::GetIO().DeltaTime * 100000.0f);
         if (dtTime <= 0) dtTime = 1; // 1 step = 0.01 ms
 
@@ -79,7 +76,7 @@ namespace cmaterial::animation {
 
         finishedAnimations.clear();
 
-        return true;
+        return &playingAnimations;
     }
 
     void Player::shutdown() {

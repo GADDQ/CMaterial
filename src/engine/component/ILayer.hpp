@@ -6,24 +6,20 @@
 #define CMATERIAL_ILAYER_H
 
 
+#include "engine/utils/INode.h"
 #include "imgui.h"
 
 
 namespace cmaterial::component {
     class IComponent;
 
-    class ILayer {
+    class ILayer : public camterial::utils::INode {
     public:
         ILayer() = default;
         virtual ~ILayer() = default;
-        virtual void setParent(IComponent *parent);
-
         virtual void render(ImDrawList* drawList, ImVec2 startPos, ImVec2 size) = 0;
 
         int priority = 0;
-
-    protected:
-        IComponent* parent = nullptr;
     };
 }
 

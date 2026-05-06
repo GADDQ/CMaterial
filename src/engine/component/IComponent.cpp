@@ -8,11 +8,11 @@
 #include "engine/eventbus/EventBus.h"
 #include "engine/eventbus/internal/event/ForceRedrawEvent.hpp"
 
-#include "ILayer.h"
+#include "ILayer.hpp"
 
-#include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <vector>
 #include "engine/utils/ordered_map.hpp"
 
 namespace cmaterial::component {
@@ -23,6 +23,7 @@ namespace cmaterial::component {
         if (component->name.empty())
             return;
 
+        component->parent = this;
         components.push_back(component);
         event::EventBus::postEvent(new event::internal::ForceRedrawEvent);
     }
@@ -95,7 +96,15 @@ namespace cmaterial::component {
 
     IComponent::~IComponent() {
         components.clear();
+
+        for (auto layerB : layersBefore) {
+            delete layerB;
+        }
         layersBefore.clear();
+
+        for (auto layerA : layersAfter) {
+            delete layerA;
+        }
         layersAfter.clear();
     }
 }

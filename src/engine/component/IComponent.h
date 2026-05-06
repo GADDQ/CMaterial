@@ -12,13 +12,15 @@
 #include <vector>
 #include <string>
 
-#include "ILayer.h"
+#include "ILayer.hpp"
+#include "engine/utils/INode.h"
 
 
 namespace cmaterial::component {
-    class IComponent {
+    class IComponent : public camterial::utils::INode {
     public:
         virtual ~IComponent();
+
         virtual void render(ImGuiIO *io) = 0;
         virtual void drawComponent(ImGuiIO *io);
 

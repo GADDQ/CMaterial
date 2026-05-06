@@ -144,7 +144,6 @@ namespace cmaterial::window {
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
             glfwSwapBuffers(glfwWindow);
         }
-        // This is the most genius code I've ever wrote!!!
         // We all know ImGui is Immediately Mode, so its logic and render is force bind, you cannot trigger logic or render independent.
         // HOWEVER, to be portable across different platforms, ImGui split itself into two parts: the core **library** and the **backend**.
         // In other words, the ImGui core is responsible for calculating vertex data, which it then submits to the backend for rendering.
@@ -157,8 +156,14 @@ namespace cmaterial::window {
     }
 
     void IWindow::addComponent(component::IComponent* comp) {
-        if (comp && !comp->name.empty())
+        if (comp && !comp->name.empty()) {
             components[comp->name] = comp;
+            comp->parent = this;
+        }
+    }
+
+    void IWindow::removeComponent(component::IComponent *comp) {
+        components.erase(comp->name);
     }
 
     bool IWindow::isHovered() const {

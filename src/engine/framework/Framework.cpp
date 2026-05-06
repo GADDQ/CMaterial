@@ -66,7 +66,9 @@ namespace cmaterial {
         EventBus::postEvent(new event::internal::ForceRedrawEvent);
         while (!glfwWindowShouldClose(hiddenWindow) && !windows.empty()) {
             bool isEventBusy = EventBus::dispatch();
-            bool isAnimationBusy = animation::Player::update();
+
+            auto playingAnimations = animation::Player::update();
+            bool isAnimationBusy = !playingAnimations->empty();
 
             if (!(isEventBusy || isAnimationBusy))
                 glfwWaitEvents();
@@ -75,6 +77,7 @@ namespace cmaterial {
 
             for (std::pair<const std::string, window::IWindow *> &pair : windows) {
                 bool isSizeChange = pair.second->_isSizeChange;
+                bool isWindowBusy = false;
                 pair.second->update();
 
                 if (pair.second->isDead) {
@@ -85,21 +88,35 @@ namespace cmaterial {
                 if (!isSizeChange && !pair.second->isHovered()) {
                     if (!pair.second->isInitialized)
                         pair.second->isInitialized = true;
-                    else continue;
                 }
 
-                pair.second->drawWindow(!(isForceRedraw || isAnimationBusy));
-            }
+                if (isAnimationBusy) {
+                    for (auto animation : *playingAnimations) {
+                        auto node = animation->parent;
+                        while (node->parent != nullptr) {
+                            node = node->parent;
+                        }
+                        if (node == pair.second) {
+                            isWindowBusy = true;
+                            goto render;
+                        }
+                    }
+                    continue;
+                }
 
-            if (!deadWindows.empty()) {
-                glfwMakeContextCurrent(hiddenWindow);
-                ImGui::SetCurrentContext(hiddenImgui);
+                render:
+                pair.second->drawWindow(!(isForceRedraw || isWindowBusy));
             }
 
             for (std::string &name : deadWindows) {
                 window::IWindow* win = windows[name];
                 windows.erase(name);
                 delete win;
+            }
+
+            if (!deadWindows.empty()) {
+                glfwMakeContextCurrent(hiddenWindow);
+                ImGui::SetCurrentContext(hiddenImgui);
             }
 
             deadWindows.clear();

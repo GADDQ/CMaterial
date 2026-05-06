@@ -4,7 +4,7 @@
 
 #ifndef CMATERIAL_OVERLAYLAYER_H
 #define CMATERIAL_OVERLAYLAYER_H
-#include "engine/component/ILayer.h"
+#include "engine/component/ILayer.hpp"
 
 
 namespace cmaterial::component::layer::animationbutton {

@@ -14,6 +14,10 @@ namespace cmaterial::component::material {
     {
 
         // 把图层挂载进组件的流水线
+        bgLayer.parent = this;
+        fgLayer.parent = this;
+        hoverAnim.parent = this;
+        rippleAnim.parent = this;
         addLayer(&bgLayer);
         addLayer(&fgLayer);
         animation::Player::reverse(&hoverAnim);

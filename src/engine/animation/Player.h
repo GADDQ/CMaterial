@@ -21,7 +21,7 @@ namespace cmaterial::animation {
         static void reverse(IAnimation* animation);
         static void stop(IAnimation* animation);
 
-        static bool update();
+        static std::vector<IAnimation *>* update();
 
         static void shutdown();
 

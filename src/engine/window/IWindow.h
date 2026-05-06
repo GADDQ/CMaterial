@@ -18,7 +18,7 @@
 
 
 namespace cmaterial::window {
-    class IWindow {
+    class IWindow : public camterial::utils::INode {
     public:
         IWindow(const std::string &name, int width, int height);
         virtual ~IWindow();
@@ -34,6 +34,7 @@ namespace cmaterial::window {
         void addComponent(component::IComponent *comp);
         void addStyle(ImGuiStyleVar styleVar, float value);
         void removeStyle(ImGuiStyleVar styleVar);
+        void removeComponent(component::IComponent *comp);
 
         std::string name;
         int width, height;

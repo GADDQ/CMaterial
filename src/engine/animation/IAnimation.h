@@ -8,11 +8,12 @@
 
 #include <unordered_map>
 
+#include "engine/utils/INode.h"
 #include "tween.h"
 
 
 namespace cmaterial::animation {
-    class IAnimation {
+    class IAnimation : public camterial::utils::INode {
     public:
         virtual ~IAnimation();
 
