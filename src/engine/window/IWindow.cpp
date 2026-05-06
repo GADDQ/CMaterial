@@ -155,12 +155,13 @@ namespace cmaterial::window {
 
     void IWindow::addComponent(component::IComponent* comp) {
         if (comp && !comp->name.empty()) {
-            components[comp->name] = comp;
             comp->parent = this;
+            components[comp->name] = comp;
         }
     }
 
     void IWindow::removeComponent(component::IComponent *comp) {
+        comp->parent = nullptr;
         components.erase(comp->name);
     }
 

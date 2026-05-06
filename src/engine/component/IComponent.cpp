@@ -32,6 +32,7 @@ namespace cmaterial::component {
         if (component == nullptr)
             return;
 
+        component->parent = nullptr;
         std::erase(components, component);
     }
 
