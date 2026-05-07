@@ -18,7 +18,7 @@ namespace cmaterial::component {
         MultiLayerButton();
         ~MultiLayerButton() = default;
 
-        void render(ImGuiIO *io) override;
+        void update(ImGuiIO *io) override;
 
     private:
         layer::animationbutton::BackgroundLayer backgroundLayer;
