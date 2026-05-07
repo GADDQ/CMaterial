@@ -57,6 +57,10 @@ namespace cmaterial::component {
         std::erase(layersAfter, layer);
     }
 
+    /**
+     * @brief The core of the update + render. Only render component when current frame is not virtual.
+     * @see IWindow
+     */
     void IComponent::drawComponent(ImGuiIO *io) {
         if (!isActive) return;
 
@@ -68,7 +72,7 @@ namespace cmaterial::component {
         splitter.SetCurrentChannel(drawList, 1);
 
         ImGui::BeginGroup();
-        this->render(io);
+        this->update(io);
         ImGui::EndGroup();
 
         ImVec2 minPos = ImGui::GetItemRectMin();

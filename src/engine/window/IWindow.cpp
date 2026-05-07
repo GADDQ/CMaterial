@@ -63,6 +63,12 @@ namespace cmaterial::window {
         postInit(io);
     }
 
+    /**
+     * @brief
+     * @details The core update logic of the window.
+     * @details If you TRULY have a compelling reason that you must use it, you can override it completely.
+     * @details But for the most case, you should override @code postUpdate()@endcode instead of this.
+     */
     void IWindow::update() {
         if (glfwWindowShouldClose(glfwWindow))
             isDead = true;
@@ -87,6 +93,23 @@ namespace cmaterial::window {
         styles.erase(styleVar);
     }
 
+    /**
+     * @brief Draw Window.
+     *
+     * @details
+     * We all know ImGui is Immediately Mode, so its logic and render is force bind, you cannot trigger logic or render
+     * independent. HOWEVER, to be portable across different platforms, ImGui split itself into two parts: the core
+     * **library** and the **backend**. In other words, the ImGui core is responsible for calculating vertex data, which
+     * it then submits to the backend for rendering. This is where the magic happens: although ImGui's rendering and
+     * logic are forcibly bound, rendering MUST actually go through the backend submission. The REAL rendering is
+     * ultimately done by the **backend**, and the vertex computation overhead is actually tiny compared to full
+     * rendering. So, by calling ImGui::Render() to let the ImGui core execute the complete rendering pipeline — but
+     * WITHOUT submitting to the backend for actual rendering — we can achieve a complete DECOUPLING of logic and
+     * rendering! Although the CPU will inevitably still calculate the vertices, we have successfully completely
+     * decoupled rendering from logic, and the **possibilities** from here are INFINITE!
+     *
+     * @param isVirtual If true, CMaterial will not actually render anything, just update internal ImGui logic.
+     */
     void IWindow::drawWindow(bool isVirtual) {
         if (!isVirtual)
             glfwMakeContextCurrent(glfwWindow);
@@ -142,15 +165,6 @@ namespace cmaterial::window {
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
             glfwSwapBuffers(glfwWindow);
         }
-        // We all know ImGui is Immediately Mode, so its logic and render is force bind, you cannot trigger logic or render independent.
-        // HOWEVER, to be portable across different platforms, ImGui split itself into two parts: the core **library** and the **backend**.
-        // In other words, the ImGui core is responsible for calculating vertex data, which it then submits to the backend for rendering.
-        // This is where the magic happens: although ImGui's rendering and logic are forcibly bound, rendering MUST actually go through the backend submission.
-        // The REAL rendering is ultimately done by the **backend**, and the vertex computation overhead is actually tiny compared to full rendering.
-        // So, by calling ImGui::Render() to let the ImGui core execute the complete rendering pipeline — but WITHOUT submitting to the backend for
-        // actual rendering — we can achieve a complete DECOUPLING of logic and rendering!
-        // Although the CPU will inevitably still calculate the vertices, we have successfully completely decoupled rendering from logic,
-        // and the **possibilities** from here are INFINITE!
     }
 
     void IWindow::addComponent(component::IComponent* comp) {

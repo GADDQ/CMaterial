@@ -23,7 +23,7 @@ namespace cmaterial::component::material {
     }
 
     // 🔮 1. 逻辑与交互中枢
-    void Button::render(ImGuiIO *io) {
+    void Button::update(ImGuiIO *io) {
         // 放置隐形按钮，夺取 120x40 的交互判定权
         ImGui::InvisibleButton(name.c_str(), buttonSize);
 

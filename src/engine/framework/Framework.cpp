@@ -27,6 +27,12 @@
 using EventBus = cmaterial::event::EventBus;
 
 namespace cmaterial {
+    /**
+     * @brief
+     * @details Initialize CMaterial Engine.
+     * @details This should be called at the beginning.
+     * @return Statement for initialize
+     */
     Framework::error Framework::initialize() {
         if (!glfwInit())
             return GLFW_INIT_FAILED;
@@ -61,6 +67,10 @@ namespace cmaterial {
         return OK;
     }
 
+    /**
+     * @brief Start CMaterial engine.
+     * @return Statement for result
+     */
     Framework::error Framework::run() {
         if (!isInitialized)
             return NOT_INIT;
@@ -83,7 +93,7 @@ namespace cmaterial {
                 double now = glfwGetTime();
 
                 if (now < nextFrameTime) {
-                    std::this_thread::sleep_for(std::chrono::microseconds(100));
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1)); // who will have 1000+ Hz monitor? 1 ms should be fine in all the time
                     continue;
                 }
 
@@ -148,6 +158,10 @@ namespace cmaterial {
         return OK;
     }
 
+    /**
+     * @brief Add a new window to the CMaterial engine.
+     * @param window Pointer of the @code IWindow@endcode
+     */
     void Framework::addWindow(window::IWindow *window) {
         window->initialize(hiddenWindow, fontAtlas);
         windows.insert({window->name, window});

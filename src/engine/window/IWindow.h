@@ -18,17 +18,49 @@
 
 
 namespace cmaterial::window {
-    class IWindow : public cmaterial::utils::INode {
+    /**
+     * @brief The base of the window.
+     *
+     * @details --- Extend Hook ---
+     *
+     * @details @code virtual postInit()@endcode : The custom logic of the initialize window
+     * @details @code virtual postUpdate()@endcode : The custom logic of the update window.
+     * @details @code virtual render()@endcode : The content of the window, Design your window in here.
+     *
+     * @details --- Property ---
+     * @details @code std::string name@endcode : The name of the window.
+     * @details @code int width, height@endcode : The width and height of the window.
+     * @details @code ImGuiWindowFlags windowFlags@endcode : The flag of the ImGuiWindow. If you don't know what it is, DON'T touch it.
+     * @details @code ImVec4 backgroundColor@endcode : The background color of the window. Use ImVec4(r, g, b, alpha) to change it.
+     *
+     * @details --- DANGER ZONE ---
+     *
+     * @details @code virtual update()@endcode : The core update logic of the window.
+     * If you TRULY have a compelling reason that you must use it, you can override it completely.
+     * But for the most case, you should override @code postUpdate()@endcode instead of this.
+     *
+     * @warning You should extend it to make custom window. NEVER USE THE INTERFACE DIRECTLY!
+     */
+    class IWindow : public utils::INode {
     public:
         IWindow(const std::string &name, int width, int height);
         virtual ~IWindow();
 
         void initialize(GLFWwindow* window, ImFontAtlas* fontAtlas);
-        void drawWindow(bool isVirtual); // isVirtual: Is only force ImGui update private states?
+        void drawWindow(bool isVirtual);
 
+        /**
+         * The custom logic of the initialize window
+         */
         virtual void postInit(ImGuiIO *io) {};
+        /**
+         * The custom logic of the update window.
+         */
         virtual void postUpdate() {};
         virtual void update();
+        /**
+         * The content of the window, Design your window in here.
+         */
         virtual void render(ImGuiIO* io) {};
 
         void addComponent(component::IComponent *comp);
@@ -38,11 +70,11 @@ namespace cmaterial::window {
 
         std::string name;
         int width, height;
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings;
+        ImVec4 backgroundColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
         bool isDead = false;
         bool isInitialized = false;
-        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings;
-        ImVec4 backgroundColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
         bool _isSizeChange = false;
 

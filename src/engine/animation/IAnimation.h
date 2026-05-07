@@ -13,7 +13,21 @@
 
 
 namespace cmaterial::animation {
-    class IAnimation : public cmaterial::utils::INode {
+    /**
+     * @brief The base of the Animation.
+     * @details Basically, it's just a place to bind property and tweeny object.
+     *
+     * @details --- Extend Hook ---
+     * @details @code Constructor()@endcode : You should bind the properties and tweens in your own constructor.
+     *
+     * @details --- Property ---
+     * @details @code bool isLoop@endcode : Is this animation loop?
+     * @details @code double ...@endcode : Any property you want to apply animation.
+     *
+     * @details --- Helper ---
+     * @details @code void bind(double*, tween<double>*)@endcode : Bind property and tween.
+     */
+    class IAnimation : public utils::INode {
     public:
         virtual ~IAnimation();
 

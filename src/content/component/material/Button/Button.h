@@ -19,7 +19,7 @@ namespace cmaterial::component::material {
         Button();
         ~Button() = default;
 
-        void render(ImGuiIO *io) override;
+        void update(ImGuiIO *io) override;
 
         // 🔮 物理状态：暴露给 Layer 和 Animation
         double stateAlpha = 0.0;    // Hover 的 8% 叠加透明度

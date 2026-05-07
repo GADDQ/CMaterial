@@ -16,7 +16,7 @@ namespace cmaterial::component {
     public:
         using IComponent::IComponent;
 
-        void render(ImGuiIO *io) override {
+        void update(ImGuiIO *io) override {
             if (ImGui::Button("SpawnWindow")) {
                 static int count = 0;
                 auto* req = new event::SpawnWindowRequest();
