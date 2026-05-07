@@ -18,6 +18,8 @@
 
 #include "engine/utils/ordered_map.hpp"
 #include <vector>
+#include <chrono>
+#include <thread>
 
 #include "engine/animation/Player.h"
 #include "engine/eventbus/internal/listener/ForceRedrawListener.hpp"
@@ -63,6 +65,13 @@ namespace cmaterial {
         if (!isInitialized)
             return NOT_INIT;
 
+        GLFWmonitor* primary = glfwGetPrimaryMonitor();
+        const GLFWvidmode* mode = glfwGetVideoMode(primary);
+        double targetHz = (mode && mode->refreshRate > 0) ? mode->refreshRate : 60.0;
+        double frameDuration = 1.0 / targetHz;
+
+        double nextFrameTime = glfwGetTime();
+
         EventBus::postEvent(new event::internal::ForceRedrawEvent);
         while (!glfwWindowShouldClose(hiddenWindow) && !windows.empty()) {
             bool isEventBusy = EventBus::dispatch();
@@ -70,8 +79,21 @@ namespace cmaterial {
             auto playingAnimations = animation::Player::update();
             bool isAnimationBusy = !playingAnimations->empty();
 
-            if (!(isEventBusy || isAnimationBusy))
+            if (!(isEventBusy || isAnimationBusy)) {
+                double now = glfwGetTime();
+
+                if (now < nextFrameTime) {
+                    std::this_thread::sleep_for(std::chrono::microseconds(100));
+                    continue;
+                }
+
+                nextFrameTime += frameDuration;
+
+                if (nextFrameTime < now)
+                    nextFrameTime = now + frameDuration;
+
                 glfwWaitEvents();
+            }
 
             ImFontAtlasUpdateNewFrame(fontAtlas, ++globalFrameCount, true);
 
