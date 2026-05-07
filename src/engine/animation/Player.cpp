@@ -7,6 +7,9 @@
 #include <vector>
 #include <imgui.h>
 
+#include "glad/gl.h"
+#include "GLFW/glfw3.h"
+
 namespace cmaterial::animation {
     std::vector<IAnimation *> Player::playingAnimations;
     std::vector<IAnimation *> Player::finishedAnimations;
@@ -42,8 +45,12 @@ namespace cmaterial::animation {
     }
 
     std::vector<IAnimation *>* Player::update() {
-        int dtTime = static_cast<int>(ImGui::GetIO().DeltaTime * 100000.0f);
-        if (dtTime <= 0) dtTime = 1; // 1 step = 0.01 ms
+        static double lastTime = glfwGetTime();
+        double currentTime = glfwGetTime();
+        double dt = currentTime - lastTime;
+        lastTime = currentTime;
+        if (dt <= 0.0) dt = 0.00001;
+        int dtTime = static_cast<int>(dt * 100000.0); // 1 step = 0.01 ms
 
         for (auto animation : playingAnimations) {
             bool allTweensFinished = true;
