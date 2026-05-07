@@ -15,17 +15,19 @@
 namespace cmaterial::animation {
     /**
      * @brief The base of the Animation.
-     * @details Basically, it's just a place to bind property and tweeny object.
+     * @details Basically, it's just a place to bind a property and a tweeny object.
      *
      * @details --- Extend Hook ---
      * @details @code Constructor()@endcode : You should bind the properties and tweens in your own constructor.
      *
      * @details --- Property ---
-     * @details @code bool isLoop@endcode : Is this animation loop?
-     * @details @code double ...@endcode : Any property you want to apply animation.
+     * @details @code bool isLoop@endcode : Is this animation looping?
+     * @details @code double ...@endcode : Any property you want to apply animation to, you need to manually manage them.
      *
      * @details --- Helper ---
-     * @details @code void bind(double*, tween<double>*)@endcode : Bind property and tween.
+     * @details @code void bind(double*, tween<double>*)@endcode : Bind a property and a tween.
+     *
+     * @warning You should extend it to make a custom Animation. NEVER USE THE INTERFACE DIRECTLY!
      */
     class IAnimation : public utils::INode {
     public:

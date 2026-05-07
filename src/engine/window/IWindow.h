@@ -23,23 +23,23 @@ namespace cmaterial::window {
      *
      * @details --- Extend Hook ---
      *
-     * @details @code virtual postInit()@endcode : The custom logic of the initialize window
-     * @details @code virtual postUpdate()@endcode : The custom logic of the update window.
-     * @details @code virtual render()@endcode : The content of the window, Design your window in here.
+     * @details @code virtual postInit()@endcode : The custom logic of the window initialization.
+     * @details @code virtual postUpdate()@endcode : The custom logic of the window update.
+     * @details @code virtual render()@endcode : The content of the window. Design your window here.
      *
      * @details --- Property ---
      * @details @code std::string name@endcode : The name of the window.
      * @details @code int width, height@endcode : The width and height of the window.
-     * @details @code ImGuiWindowFlags windowFlags@endcode : The flag of the ImGuiWindow. If you don't know what it is, DON'T touch it.
+     * @details @code ImGuiWindowFlags windowFlags@endcode : The flags of the ImGuiWindow. If you don't know what they are, DON'T touch them.
      * @details @code ImVec4 backgroundColor@endcode : The background color of the window. Use ImVec4(r, g, b, alpha) to change it.
      *
      * @details --- DANGER ZONE ---
      *
      * @details @code virtual update()@endcode : The core update logic of the window.
      * If you TRULY have a compelling reason that you must use it, you can override it completely.
-     * But for the most case, you should override @code postUpdate()@endcode instead of this.
+     * But in most cases, you should override @code postUpdate()@endcode instead of this.
      *
-     * @warning You should extend it to make custom window. NEVER USE THE INTERFACE DIRECTLY!
+     * @warning You should extend it to make a custom Window. NEVER USE THE INTERFACE DIRECTLY!
      */
     class IWindow : public utils::INode {
     public:
@@ -50,16 +50,16 @@ namespace cmaterial::window {
         void drawWindow(bool isVirtual);
 
         /**
-         * The custom logic of the initialize window
+         * The custom logic of the window initialization.
          */
         virtual void postInit(ImGuiIO *io) {};
         /**
-         * The custom logic of the update window.
+         * The custom logic of the window update.
          */
         virtual void postUpdate() {};
         virtual void update();
         /**
-         * The content of the window, Design your window in here.
+         * The custom logic of the window initialization.
          */
         virtual void render(ImGuiIO* io) {};
 

@@ -58,7 +58,7 @@ namespace cmaterial::component {
     }
 
     /**
-     * @brief The core of the update + render. Only render component when current frame is not virtual.
+     * @brief The core of the update + render. Only render the component when the current frame is not virtual.
      * @see IWindow
      */
     void IComponent::drawComponent(ImGuiIO *io) {

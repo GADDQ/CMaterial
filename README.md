@@ -33,6 +33,9 @@ Design your own components however you wish using OpenGL 3.3 Core and ImGui APIs
 ## Hybrid Mode
 Neither Immediate Mode nor Retained Mode—but ***both***. CMaterial leverages Retained Mode at the **UI Layer** for the structural integrity of a mature framework, while empowering the **Component Layer** with Immediate Mode for unrestricted control over how every pixel is rendered.
 
+## Pure Upper-Layer Construction
+All of CMaterial's functionality is implemented entirely at the upper layer, **without modifying a single line of code from dependent libraries**. In most cases, you can update the dependent libraries on your own, enjoying all upstream updates **without spending time re-porting the framework**.
+
 ---
 
 ## Libraries
