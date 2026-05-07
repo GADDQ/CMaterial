@@ -6,11 +6,6 @@
 
 #include "imgui.h"
 
-#include <string>
-#include <unordered_map>
-
-#include "engine/eventbus/EventBus.h"
-
 namespace cmaterial::window {
     void BasicWindow::postInit(ImGuiIO *io) {
         addStyle(ImGuiStyleVar_WindowBorderSize, 0.0f);
