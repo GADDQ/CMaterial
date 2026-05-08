@@ -12,7 +12,14 @@
 
 
 namespace cmaterial::animation {
-    class Player{
+    /**
+     * @brief The Animation player.
+     * @details You will play all the Animation in here.
+     *
+     * @warning No extra description because this is not finished.
+     * @todo Rebuild with consumer mode.
+     */
+    class Player{ // TODO: Rebuild
     public:
         Player() = default;
         ~Player();

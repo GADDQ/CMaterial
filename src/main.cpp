@@ -11,27 +11,29 @@
 #include "content/logic/listener/WindowLogic.h"
 #include "content/window/BasicWindow/BasicWindow.h"
 
+using namespace cmaterial;
+
 int main() {
     // Before you start to write application, you must initialize the Framework first:
-    cmaterial::Framework app;
+    Framework app;
     app.initialize();
 
     // Add your Listener:
-    cmaterial::event::EventBus::addListener(new cmaterial::event::WindowLogic(&app));
+    event::EventBus::addListener(new event::WindowLogic(&app));
 
     // Create your windows:
-    cmaterial::window::BasicWindow* window1 = new cmaterial::window::BasicWindow("Milestone Single Test", 300, 100);
-    cmaterial::window::BasicWindow* window2 = new cmaterial::window::BasicWindow("Hybrid Final Test", 300, 100);
+    window::BasicWindow* window1 = new window::BasicWindow("Milestone Single Test", 300, 100);
+    window::BasicWindow* window2 = new window::BasicWindow("Hybrid Final Test", 300, 100);
 
     // Create your components:
-    cmaterial::component::BasicButton* button1 = new cmaterial::component::BasicButton();
+    component::BasicButton* button1 = new component::BasicButton();
     button1->name = "buttonInWindow1";
-    cmaterial::component::CreatorButton* button2 = new cmaterial::component::CreatorButton();
+    component::CreatorButton* button2 = new component::CreatorButton();
     button2->name = "buttonInWindow2";
 
-    cmaterial::component::MultiLayerButton* multiLayerButton = new cmaterial::component::MultiLayerButton();
+    component::MultiLayerButton* multiLayerButton = new component::MultiLayerButton();
     multiLayerButton->name = "MultiLayer";
-    cmaterial::component::material::Button* md3Button = new cmaterial::component::material::Button();
+    component::material::Button* md3Button = new component::material::Button();
     md3Button->name = "MD3 Button";
 
     // To inject components in an exist window:
