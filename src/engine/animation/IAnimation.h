@@ -22,7 +22,8 @@ namespace cmaterial::animation {
      *
      * @details --- Property ---
      * @details @code bool isLoop@endcode : Is this animation looping?
-     * @details @code double ...@endcode : Any property you want to apply animation to, you need to manually manage them.
+     * @details @code double ...@endcode : Any property you want to apply animation to, you need to manually manage
+     * them.
      *
      * @details --- Helper ---
      * @details @code void bind(double*, tween<double>*)@endcode : Bind a property and a tween.

@@ -19,7 +19,7 @@ namespace cmaterial::animation {
      * @warning No extra description because this is not finished.
      * @todo Rebuild with consumer mode.
      */
-    class Player{ // TODO: Rebuild
+    class Player {
     public:
         Player() = default;
         ~Player();

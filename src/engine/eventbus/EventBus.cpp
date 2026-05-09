@@ -5,7 +5,7 @@
 #include "EventBus.h"
 #include <algorithm>
 #include "GLFW/glfw3.h"
-#include "IEvent.h"
+#include "IEvent.hpp"
 #include "IListener.h"
 
 #include <unordered_map>
@@ -20,6 +20,9 @@ namespace cmaterial::event {
     std::mutex EventBus::queueMutex;
     std::mutex EventBus::registerMutex;
 
+    /**
+     * @brief Let a Listener start to work.
+     */
     void EventBus::addListener(IListener* listener) {
         if (!listener) return;
 
@@ -37,6 +40,9 @@ namespace cmaterial::event {
         }
     }
 
+    /**
+     * Post an Event to the Event System, Listener will receive it later.
+     */
     void EventBus::postEvent(IEvent* event) {
         if (!event) return;
 
@@ -65,7 +71,7 @@ namespace cmaterial::event {
             }
 
             for (auto* handler : handlersToCall) {
-                if (event->getIsCancelled()) break;
+                if (event->isCancelled) break;
                 handler->execute(event);
             }
 
@@ -75,6 +81,9 @@ namespace cmaterial::event {
         return true;
     }
 
+    /**
+     * @brief Let a Listener stop working.
+     */
     void EventBus::removeListener(IListener* listener) {
         if (!listener) return;
 

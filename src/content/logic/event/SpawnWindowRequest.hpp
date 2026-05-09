@@ -6,7 +6,7 @@
 #define CMATERIAL_TESTEVENT_H
 
 
-#include "engine/eventbus/IEvent.h"
+#include "engine/eventbus/IEvent.hpp"
 
 #include <string>
 

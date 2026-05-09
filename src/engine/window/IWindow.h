@@ -30,8 +30,10 @@ namespace cmaterial::window {
      * @details --- Property ---
      * @details @code std::string name@endcode : The name of the window.
      * @details @code int width, height@endcode : The width and height of the window.
-     * @details @code ImGuiWindowFlags windowFlags@endcode : The flags of the ImGuiWindow. If you don't know what they are, DON'T touch them.
-     * @details @code ImVec4 backgroundColor@endcode : The background color of the window. Use ImVec4(r, g, b, alpha) to change it.
+     * @details @code ImGuiWindowFlags windowFlags@endcode : The flags of the ImGuiWindow. If you don't know what they
+     * are, DON'T touch them.
+     * @details @code ImVec4 backgroundColor@endcode : The background color of the window. Use
+     * @code ImVec4(r, g, b, alpha)@endcode to change it.
      *
      * @details --- DANGER ZONE ---
      *

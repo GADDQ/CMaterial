@@ -22,8 +22,8 @@ namespace cmaterial::component {
      * @details Basically, it's a state machine.
      * @details You need to figure out how to distinguish between different states, when to post an Event, and how to
      * draw your component every frame.
-     * @details It's probably the most complex part in CMaterial, but once you understand it, it's very easy to create any
-     * component for yourself.
+     * @details It's probably the most complex part in CMaterial, but once you understand it, it's very easy to create
+     * any component for yourself.
      *
      * @details --- Extend Hook ---
      * @details @code virtual update() = 0@endcode : The core update logic of the component.
@@ -33,8 +33,10 @@ namespace cmaterial::component {
      * @details @code bool isActive@endcode : Should the Component update + render?
      *
      * @details --- DANGER ZONE ---
-     * @details @code virtual drawComponent()@endcode : The core of the update + render. Only render the component when the current frame is not virtual.
-     * If you TRULY have a compelling reason that you must use it, you can override it completely. But in most cases, you SHOULDN'T touch it.
+     * @details @code virtual drawComponent()@endcode : The core of the update + render. Only render the component when
+     * the current frame is not virtual.
+     * @details If you TRULY have a compelling reason that you must use it, you can override it completely. But in most
+     * cases, you SHOULDN'T touch it.
      *
      * @warning You should extend it to make a custom Component. NEVER USE THE INTERFACE DIRECTLY!
      */

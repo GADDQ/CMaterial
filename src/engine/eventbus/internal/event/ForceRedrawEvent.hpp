@@ -4,7 +4,7 @@
 
 #ifndef CMATERIAL_EMPTYEVENT_H
 #define CMATERIAL_EMPTYEVENT_H
-#include "engine/eventbus/IEvent.h"
+#include "engine/eventbus/IEvent.hpp"
 
 
 namespace cmaterial::event::internal {
