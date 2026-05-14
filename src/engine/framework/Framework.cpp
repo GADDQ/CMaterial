@@ -21,6 +21,8 @@
 #include <chrono>
 #include <thread>
 
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 #include "engine/animation/Player.h"
 #include "engine/eventbus/internal/listener/ForceRedrawListener.hpp"
 
@@ -82,6 +84,8 @@ namespace cmaterial {
 
         double nextFrameTime = glfwGetTime();
 
+        bool isNotFirstRender = false;
+
         EventBus::postEvent(new event::internal::ForceRedrawEvent);
         while (!glfwWindowShouldClose(hiddenWindow) && !windows.empty()) {
             bool isEventBusy = EventBus::dispatch();
@@ -103,6 +107,11 @@ namespace cmaterial {
                     nextFrameTime = now + frameDuration;
 
                 glfwWaitEvents();
+            } else {
+                if (!isNotFirstRender)
+                    isNotFirstRender = true;
+                else
+                    glfwPollEvents();
             }
 
             ImFontAtlasUpdateNewFrame(fontAtlas, ++globalFrameCount, true);

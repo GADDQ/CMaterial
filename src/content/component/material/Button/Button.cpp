@@ -1,5 +1,5 @@
 //
-// Created by Earth_Studio on 2026/4/27.
+// Created by Earth_Studio on 2026/5/12.
 //
 
 #include "Button.h"
@@ -7,87 +7,72 @@
 #include "engine/animation/Player.h"
 #include "engine/eventbus/EventBus.h"
 
-namespace cmaterial::component::material {
-    Button::Button()
-        : hoverAnim(&stateAlpha), rippleAnim(&rippleRadius, &rippleAlpha), bgLayer(this), fgLayer(this)
-    {
+#include "content/component/material/Button/layer/RippleLayer.h"
 
-        // 把图层挂载进组件的流水线
-        bgLayer.parent = this;
-        fgLayer.parent = this;
-        hoverAnim.parent = this;
-        rippleAnim.parent = this;
-        addLayer(&bgLayer);
-        addLayer(&fgLayer);
-        animation::Player::reverse(&hoverAnim);
+namespace cmaterial::component::material {
+    Button::Button() {
+        m_bgLayer = new layer::BGLayer();
+        addLayer(m_bgLayer);
     }
 
-    // 🔮 1. 逻辑与交互中枢
+    Button::~Button() {
+        if (m_hoverAnim) {
+            cmaterial::animation::Player::stop(m_hoverAnim);
+            delete m_hoverAnim;
+        }
+    }
+
     void Button::update(ImGuiIO *io) {
-        // 放置隐形按钮，夺取 120x40 的交互判定权
-        ImGui::InvisibleButton(name.c_str(), buttonSize);
+        m_bgLayer->primaryColor = this->primaryColor;
+        m_bgLayer->onPrimaryColor = this->onPrimaryColor;
 
-        bool isHovered = ImGui::IsItemHovered();
+        ImVec2 size(ImGui::CalcTextSize(name.c_str()).x + 48.0f, 40.0f);
+        ImVec2 p_min = ImGui::GetCursorScreenPos();
+        ImGui::InvisibleButton(name.c_str(), size);
 
-        // 💡 状态机：处理 Hover 动画的平滑正反转
-        if (isHovered != lastHoverState) {
-            lastHoverState = isHovered;
-            if (isHovered) {
-                animation::Player::reverse(&hoverAnim);
-                animation::Player::play(&hoverAnim);
-            } else {
-                animation::Player::reverse(&hoverAnim);
-                animation::Player::play(&hoverAnim);
+        bool hovered = ImGui::IsItemHovered();
+        bool active = ImGui::IsItemActive();
+        bool clicked = ImGui::IsItemClicked();
+
+        if (hovered && !m_isHovering) {
+            m_isHovering = true;
+            if (m_hoverAnim) { cmaterial::animation::Player::stop(m_hoverAnim); delete m_hoverAnim; }
+            m_hoverAnim = new animation::HoverAnimation(&m_bgLayer->hoverAlpha, 1.0, this);
+            m_hoverAnim->parent = this;
+            cmaterial::animation::Player::play(m_hoverAnim);
+        } else if (!hovered && m_isHovering) {
+            m_isHovering = false;
+            if (m_hoverAnim) { cmaterial::animation::Player::stop(m_hoverAnim); delete m_hoverAnim; }
+            m_hoverAnim = new animation::HoverAnimation(&m_bgLayer->hoverAlpha, 0.0, this);
+            m_hoverAnim->parent = this;
+            cmaterial::animation::Player::play(m_hoverAnim);
+        }
+
+        if (clicked) {
+            addLayer(new layer::RippleLayer(io->MousePos, this->onPrimaryColor));
+        }
+
+        // for (int i = layersBefore.size() - 1; i >= 0; --i) {
+        //     auto r = (layer::RippleLayer*) layersBefore[i];
+        //     if (r && r->isAnimationFinished()) {
+        //         removeLayer(r);
+        //     }
+        // }
+
+        if (active && !m_isPressed) m_isPressed = true;
+        else if (!active && m_isPressed) {
+            m_isPressed = false;
+            if (hovered) {
+                // auto* e = new event::ButtonClickedEvent();
+                // e->buttonName = this->name;
+                // e->buttonInstance = this;
+                // event::EventBus::postEvent(e);
             }
         }
 
-        // 💡 状态机：处理 Ripple 动画的爆炸
-        if (ImGui::IsItemClicked()) {
-            rippleCenter = io->MousePos;
-            // 计算对角线作为最大半径，保证波纹填满按钮
-            double maxR = std::sqrt(buttonSize.x * buttonSize.x + buttonSize.y * buttonSize.y);
-            rippleAnim.setMaxRadius(maxR);
-            rippleAnim.reset(); // 回归 0
-            animation::Player::play(&rippleAnim);
-        }
-    }
-
-    // 🔮 2. 底层排面：背景
-    void Button::BgLayer::render(ImDrawList* drawList, ImVec2 startPos, ImVec2 size) {
-        // M3 标准 Primary 紫色：#6750A4
-        ImU32 primaryColor = IM_COL32(103, 80, 164, 255);
-        // 高度一半即为胶囊圆角
-        float rounding = size.y * 0.5f;
-
-        drawList->AddRectFilled(startPos, ImVec2(startPos.x + size.x, startPos.y + size.y), primaryColor, rounding);
-    }
-
-    // 🔮 3. 顶层排面：状态覆盖、波纹与文字
-    void Button::FgLayer::render(ImDrawList* drawList, ImVec2 startPos, ImVec2 size) {
-        float rounding = size.y * 0.5f;
-        ImVec2 endPos = ImVec2(startPos.x + size.x, startPos.y + size.y);
-
-        // A. 绘制 State Overlay (Hover 状态的白光叠加)
-        if (btn->stateAlpha > 0.001) {
-            ImU32 overlayColor = IM_COL32(255, 255, 255, (int)(btn->stateAlpha * 255));
-            drawList->AddRectFilled(startPos, endPos, overlayColor, rounding);
-        }
-
-        // B. 绘制 Ripple 波纹
-        if (btn->rippleAlpha > 0.001) {
-            // 物理裁剪：波纹绝对不会溢出胶囊圆角按钮！
-            drawList->PushClipRect(startPos, endPos, true);
-            ImU32 rippleColor = IM_COL32(255, 255, 255, (int)(btn->rippleAlpha * 255));
-            drawList->AddCircleFilled(btn->rippleCenter, (float)btn->rippleRadius, rippleColor);
-            drawList->PopClipRect();
-        }
-
-        // C. 绘制居中文字
-        ImVec2 textSize = ImGui::CalcTextSize(btn->name.c_str());
-        ImVec2 textPos = ImVec2(
-            startPos.x + (size.x - textSize.x) * 0.5f,
-            startPos.y + (size.y - textSize.y) * 0.5f
+        ImGui::GetWindowDrawList()->AddText(
+            ImVec2(p_min.x + 24.0f, p_min.y + (40.0f - ImGui::CalcTextSize(name.c_str()).y) / 2.0f),
+            ImGui::GetColorU32(onPrimaryColor), name.c_str()
         );
-        drawList->AddText(textPos, IM_COL32(255, 255, 255, 255), btn->name.c_str());
     }
-} // namespace cmaterial::component::material
+}
