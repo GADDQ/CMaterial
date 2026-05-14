@@ -52,13 +52,6 @@ namespace cmaterial::component::material {
             addLayer(new layer::RippleLayer(io->MousePos, this->onPrimaryColor));
         }
 
-        // for (int i = layersBefore.size() - 1; i >= 0; --i) {
-        //     auto r = (layer::RippleLayer*) layersBefore[i];
-        //     if (r && r->isAnimationFinished()) {
-        //         removeLayer(r);
-        //     }
-        // }
-
         if (active && !m_isPressed) m_isPressed = true;
         else if (!active && m_isPressed) {
             m_isPressed = false;
