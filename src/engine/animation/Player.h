@@ -16,8 +16,8 @@ namespace cmaterial::animation {
      * @brief The Animation player.
      * @details You will play all the Animation in here.
      *
-     * @warning No extra description because this is not finished.
-     * @todo Rebuild with consumer mode.
+     * @details --- Danger Zone ---
+     * @details @code update()@endcode : This is used by the framework itself to update. DO NOT USE IT!
      */
     class Player {
     public:
@@ -25,6 +25,8 @@ namespace cmaterial::animation {
         ~Player();
 
         static void play(IAnimation* animation);
+        static void forward(IAnimation* animation);
+        static void backward(IAnimation* animation);
         static void reverse(IAnimation* animation);
         static void stop(IAnimation* animation);
 

@@ -38,9 +38,11 @@ namespace cmaterial::component {
         if (layer == nullptr)
             return;
 
+        layer->parent = this;
+
         std::vector<ILayer*>& layers = (layer->priority < 0) ? layersBefore : layersAfter;
 
-        auto it = std::lower_bound(layers.begin(), layers.end(), layer,
+        auto it = std::ranges::lower_bound(layers, layer,
             [](ILayer* a, ILayer* b) {
                 return a->priority < b->priority;
             });
@@ -55,6 +57,8 @@ namespace cmaterial::component {
 
         std::erase(layersBefore, layer);
         std::erase(layersAfter, layer);
+
+        delete layer;
     }
 
     /**
