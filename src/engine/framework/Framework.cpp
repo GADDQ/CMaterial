@@ -14,16 +14,27 @@
 #endif
 
 #include "engine/eventbus/EventBus.h"
-#include "engine/eventbus/internal/event/EmptyEvent.hpp"
+#include "engine/eventbus/internal/event/ForceRedrawEvent.hpp"
 
-#include <unordered_map>
+#include "engine/utils/ordered_map.hpp"
 #include <vector>
+#include <chrono>
+#include <thread>
 
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 #include "engine/animation/Player.h"
+#include "engine/eventbus/internal/listener/ForceRedrawListener.hpp"
 
 using EventBus = cmaterial::event::EventBus;
 
 namespace cmaterial {
+    /**
+     * @brief
+     * @details Initialize CMaterial Engine.
+     * @details This should be called at the beginning.
+     * @return Statement for initialize
+     */
     Framework::error Framework::initialize() {
         if (!glfwInit())
             return GLFW_INIT_FAILED;
@@ -51,27 +62,63 @@ namespace cmaterial {
         hiddenImgui = ImGui::CreateContext(fontAtlas);
         ImGui::SetCurrentContext(hiddenImgui);
 
+        EventBus::addListener(new event::internal::ForceRedrawListener(&isForceRedraw));
+
         isInitialized = true;
 
         return OK;
     }
 
+    /**
+     * @brief Start CMaterial engine.
+     * @return Statement for result
+     */
     Framework::error Framework::run() {
         if (!isInitialized)
             return NOT_INIT;
 
-        EventBus::postEvent(new event::internal::EmptyEvent);
+        GLFWmonitor* primary = glfwGetPrimaryMonitor();
+        const GLFWvidmode* mode = glfwGetVideoMode(primary);
+        double targetHz = (mode && mode->refreshRate > 0) ? mode->refreshRate : 60.0;
+        double frameDuration = 1.0 / targetHz;
+
+        double nextFrameTime = glfwGetTime();
+
+        bool isNotFirstRender = false;
+
+        EventBus::postEvent(new event::internal::ForceRedrawEvent);
         while (!glfwWindowShouldClose(hiddenWindow) && !windows.empty()) {
             bool isEventBusy = EventBus::dispatch();
-            bool isAnimationBusy = animation::Player::update();
 
-            if (!(isEventBusy || isAnimationBusy))
+            auto playingAnimations = animation::Player::update();
+            bool isAnimationBusy = !playingAnimations->empty();
+
+            if (!(isEventBusy || isAnimationBusy)) {
+                double now = glfwGetTime();
+
+                if (now < nextFrameTime) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1)); // who will have 1000+ Hz monitor? 1 ms should be fine in all the time
+                    continue;
+                }
+
+                nextFrameTime += frameDuration;
+
+                if (nextFrameTime < now)
+                    nextFrameTime = now + frameDuration;
+
                 glfwWaitEvents();
+            } else {
+                if (!isNotFirstRender)
+                    isNotFirstRender = true;
+                else
+                    glfwPollEvents();
+            }
 
             ImFontAtlasUpdateNewFrame(fontAtlas, ++globalFrameCount, true);
 
             for (std::pair<const std::string, window::IWindow *> &pair : windows) {
                 bool isSizeChange = pair.second->_isSizeChange;
+                bool isWindowBusy = false;
                 pair.second->update();
 
                 if (pair.second->isDead) {
@@ -82,15 +129,24 @@ namespace cmaterial {
                 if (!isSizeChange && !pair.second->isHovered()) {
                     if (!pair.second->isInitialized)
                         pair.second->isInitialized = true;
-                    else continue;
                 }
 
-                pair.second->drawWindow(!isAnimationBusy);
-            }
+                if (isAnimationBusy) {
+                    for (auto animation : *playingAnimations) {
+                        auto node = animation->parent;
+                        while (node->parent != nullptr) {
+                            node = node->parent;
+                        }
+                        if (node == pair.second) {
+                            isWindowBusy = true;
+                            goto render;
+                        }
+                    }
+                    continue;
+                }
 
-            if (!deadWindows.empty()) {
-                glfwMakeContextCurrent(hiddenWindow);
-                ImGui::SetCurrentContext(hiddenImgui);
+                render:
+                pair.second->drawWindow(!(isForceRedraw || isWindowBusy));
             }
 
             for (std::string &name : deadWindows) {
@@ -98,11 +154,23 @@ namespace cmaterial {
                 windows.erase(name);
                 delete win;
             }
+
+            if (!deadWindows.empty()) {
+                glfwMakeContextCurrent(hiddenWindow);
+                ImGui::SetCurrentContext(hiddenImgui);
+            }
+
+            deadWindows.clear();
+            isForceRedraw = false;
         }
 
         return OK;
     }
 
+    /**
+     * @brief Add a new window to the CMaterial engine.
+     * @param window Pointer of the @code IWindow@endcode
+     */
     void Framework::addWindow(window::IWindow *window) {
         window->initialize(hiddenWindow, fontAtlas);
         windows.insert({window->name, window});

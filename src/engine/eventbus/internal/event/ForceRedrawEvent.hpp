@@ -4,12 +4,12 @@
 
 #ifndef CMATERIAL_EMPTYEVENT_H
 #define CMATERIAL_EMPTYEVENT_H
-#include "engine/eventbus/IEvent.h"
+#include "engine/eventbus/IEvent.hpp"
 
 
 namespace cmaterial::event::internal {
-    struct EmptyEvent : IEvent {
-        REGISTEREVENT(EmptyEvent);
+    struct ForceRedrawEvent : IEvent {
+        REGISTEREVENT(ForceRedrawEvent);
     };
 }
 

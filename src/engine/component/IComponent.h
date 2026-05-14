@@ -9,23 +9,50 @@
 
 #include "imgui.h"
 
-#include <unordered_map>
 #include <vector>
 #include <string>
 
-#include "ILayer.h"
+#include "ILayer.hpp"
+#include "engine/utils/INode.h"
 
 
 namespace cmaterial::component {
-    class IComponent {
+    /**
+     * @brief The base of Component.
+     * @details Basically, it's a state machine.
+     * @details You need to figure out how to distinguish between different states, when to post an Event, and how to
+     * draw your component every frame.
+     * @details It's probably the most complex part in CMaterial, but once you understand it, it's very easy to create
+     * any component for yourself.
+     *
+     * @details --- Extend Hook ---
+     * @details @code virtual update() = 0@endcode : The core update logic of the component.
+     *
+     * @details --- Property ---
+     * @details @code std::string name@endcode : The name of the Component.
+     * @details @code bool isActive@endcode : Should the Component update + render?
+     *
+     * @details --- DANGER ZONE ---
+     * @details @code virtual drawComponent()@endcode : The core of the update + render. Only render the component when
+     * the current frame is not virtual.
+     * @details If you TRULY have a compelling reason that you must use it, you can override it completely. But in most
+     * cases, you SHOULDN'T touch it.
+     *
+     * @warning You should extend it to make a custom Component. NEVER USE THE INTERFACE DIRECTLY!
+     */
+    class IComponent : public utils::INode {
     public:
-        virtual ~IComponent() = default;
-        virtual void render(ImGuiIO *io) = 0;
-        virtual void addComponent(IComponent *component);
+        virtual ~IComponent();
 
-        void addLayer();
+        virtual void update(ImGuiIO *io) = 0;
+        virtual void drawComponent(ImGuiIO *io);
 
-        bool getIsDead();
+        void addComponent(IComponent *component);
+        void removeComponent(IComponent *component);
+        void addLayer(ILayer *layer);
+        void removeLayer(ILayer *layer);
+
+        bool getIsDead() const;
 
         std::string name;
         int xPercent = 0;
@@ -34,8 +61,9 @@ namespace cmaterial::component {
 
     protected:
         bool isDead = false;
-        std::unordered_map<std::string, IComponent *> components;
-        std::vector<ILayer *> layers;
+        std::vector<IComponent *> components;
+        std::vector<ILayer *> layersBefore;
+        std::vector<ILayer *> layersAfter;
     };
 }
 

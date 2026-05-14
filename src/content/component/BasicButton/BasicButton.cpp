@@ -4,7 +4,7 @@
 
 #include "BasicButton.h"
 
-void cmaterial::component::BasicButton::render(ImGuiIO *io) {
+void cmaterial::component::BasicButton::update(ImGuiIO *io) {
     if (ImGui::Button(name.c_str()))
         onActive();
 }

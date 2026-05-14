@@ -11,8 +11,6 @@
 
 #include "GLFW/glfw3.h"
 #include "engine/eventbus/EventBus.h"
-#include "engine/eventbus/internal/event/EmptyEvent.hpp"
-#include "imgui_internal.h"
 
 namespace cmaterial::window {
     void window_size_callback(GLFWwindow* window, int width, int height) {
@@ -65,6 +63,12 @@ namespace cmaterial::window {
         postInit(io);
     }
 
+    /**
+     * @brief
+     * @details The core update logic of the window.
+     * @details If you TRULY have a compelling reason that you must use it, you can override it completely.
+     * @details But in most cases, you should override @code postUpdate()@endcode instead of this.
+     */
     void IWindow::update() {
         if (glfwWindowShouldClose(glfwWindow))
             isDead = true;
@@ -81,6 +85,31 @@ namespace cmaterial::window {
         postUpdate();
     }
 
+    void IWindow::addStyle(ImGuiStyleVar styleVar, float value) {
+        styles[styleVar] = value;
+    }
+
+    void IWindow::removeStyle(ImGuiStyleVar styleVar) {
+        styles.erase(styleVar);
+    }
+
+    /**
+     * @brief Draw Window.
+     *
+     * @details
+     * We all know ImGui is Immediate Mode, so its logic and render are forcibly bound; you cannot trigger logic or render
+     * independently. HOWEVER, to be portable across different platforms, ImGui splits itself into two parts: the core
+     * **library** and the **backend**. In other words, the ImGui core is responsible for calculating vertex data, which
+     * it then submits to the backend for rendering. This is where the magic happens: although ImGui's rendering and
+     * logic are forcibly bound, rendering MUST actually go through the backend submission. The REAL rendering is
+     * ultimately done by the **backend**, and the vertex computation overhead is actually tiny compared to full
+     * rendering. So, by calling ImGui::Render() to let the ImGui core execute the complete rendering pipeline — but
+     * WITHOUT submitting to the backend for actual rendering — we can achieve a complete DECOUPLING of logic and
+     * rendering! Although the CPU will inevitably still calculate the vertices, we have successfully and completely
+     * decoupled rendering from logic, and the **possibilities** from here are INFINITE!
+     *
+     * @param isVirtual If true, CMaterial will not actually render anything, just update internal ImGui logic.
+     */
     void IWindow::drawWindow(bool isVirtual) {
         if (!isVirtual)
             glfwMakeContextCurrent(glfwWindow);
@@ -95,7 +124,35 @@ namespace cmaterial::window {
         ImGui::SetNextWindowPos(ImVec2(0, 0));
         ImGui::SetNextWindowSize(io->DisplaySize);
 
-        this->render(io);
+        for (auto style : styles) {
+            ImGui::PushStyleVar(style.first, style.second);
+        }
+
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, backgroundColor);
+
+        if (ImGui::Begin(this->name.c_str(), nullptr, windowFlags)) {
+            this->render(io);
+
+            for (auto &pair: components) {
+                if (pair.second->getIsDead()) {
+                    deadComponents.push_back(pair.first);
+                    continue;
+                }
+                pair.second->drawComponent(io);
+            }
+
+            for (const std::string &name: deadComponents) {
+                component::IComponent *component = components[name];
+                components.erase(name);
+                delete component;
+            }
+
+            deadComponents.clear();
+        }
+        ImGui::End();
+
+        ImGui::PopStyleColor();
+        ImGui::PopStyleVar(styles.size());
 
         ImGui::Render();
 
@@ -111,8 +168,15 @@ namespace cmaterial::window {
     }
 
     void IWindow::addComponent(component::IComponent* comp) {
-        if (comp && !comp->name.empty())
+        if (comp && !comp->name.empty()) {
+            comp->parent = this;
             components[comp->name] = comp;
+        }
+    }
+
+    void IWindow::removeComponent(component::IComponent *comp) {
+        comp->parent = nullptr;
+        components.erase(comp->name);
     }
 
     bool IWindow::isHovered() const {

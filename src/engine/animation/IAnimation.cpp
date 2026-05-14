@@ -6,9 +6,14 @@
 
 #include <unordered_map>
 
+#include "Player.h"
 #include "tween.h"
 
 namespace cmaterial::animation {
+    IAnimation::IAnimation(INode* parent) {
+        this->parent = parent;
+    }
+
     void IAnimation::reset() {
         for (auto binder : animationBinders) {
             if (_isReverse)
@@ -18,15 +23,16 @@ namespace cmaterial::animation {
         }
     }
 
-    std::unordered_map<double *, tweeny::tween<double> *>* IAnimation::getAnimationBinders() {
+    std::vector<std::pair<double *, tweeny::tween<double> *>>* IAnimation::getAnimationBinders() {
         return &animationBinders;
     }
 
     void IAnimation::bind(double* property, tweeny::tween<double>* tween) {
-        animationBinders[property] = tween;
+        animationBinders.push_back({property, tween});
     }
 
     IAnimation::~IAnimation() {
+        Player::stop(this);
         animationBinders.clear();
     }
 }

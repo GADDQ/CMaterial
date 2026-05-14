@@ -6,7 +6,12 @@
 
 #include "GLFW/glfw3.h"
 #include "engine/eventbus/EventBus.h"
-#include "engine/eventbus/internal/event/EmptyEvent.hpp"
+#include "engine/eventbus/internal/event/ForceRedrawEvent.hpp"
+
+#include "ILayer.hpp"
+
+#include <algorithm>
+#include <vector>
 
 namespace cmaterial::component {
     void IComponent::addComponent(IComponent *component) {
@@ -16,11 +21,97 @@ namespace cmaterial::component {
         if (component->name.empty())
             return;
 
-        components.insert({component->name, component});
-        event::EventBus::postEvent(new event::internal::EmptyEvent);
+        component->parent = this;
+        components.push_back(component);
+        event::EventBus::postEvent(new event::internal::ForceRedrawEvent);
     }
 
-    bool IComponent::getIsDead() {
+    void IComponent::removeComponent(IComponent *component) {
+        if (component == nullptr)
+            return;
+
+        component->parent = nullptr;
+        std::erase(components, component);
+    }
+
+    void IComponent::addLayer(ILayer *layer) {
+        if (layer == nullptr)
+            return;
+
+        layer->parent = this;
+
+        std::vector<ILayer*>& layers = (layer->priority < 0) ? layersBefore : layersAfter;
+
+        auto it = std::ranges::lower_bound(layers, layer,
+            [](ILayer* a, ILayer* b) {
+                return a->priority < b->priority;
+            });
+
+        layers.insert(it, layer);
+        event::EventBus::postEvent(new event::internal::ForceRedrawEvent);
+    }
+
+    void IComponent::removeLayer(ILayer *layer) {
+        if (layer == nullptr)
+            return;
+
+        std::erase(layersBefore, layer);
+        std::erase(layersAfter, layer);
+
+        delete layer;
+    }
+
+    /**
+     * @brief The core of the update + render. Only render the component when the current frame is not virtual.
+     * @see IWindow
+     */
+    void IComponent::drawComponent(ImGuiIO *io) {
+        if (!isActive) return;
+
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+        ImDrawListSplitter splitter;
+        splitter.Split(drawList, 3);
+
+        splitter.SetCurrentChannel(drawList, 1);
+
+        ImGui::BeginGroup();
+        this->update(io);
+        ImGui::EndGroup();
+
+        ImVec2 minPos = ImGui::GetItemRectMin();
+        ImVec2 maxPos = ImGui::GetItemRectMax();
+        ImVec2 size = ImVec2(maxPos.x - minPos.x, maxPos.y - minPos.y);
+
+        splitter.SetCurrentChannel(drawList, 0);
+        for (auto* layer : layersBefore) {
+            layer->render(drawList, minPos, size);
+        }
+
+        splitter.SetCurrentChannel(drawList, 2);
+        for (auto* layer : layersAfter) {
+            layer->render(drawList, minPos, size);
+        }
+
+        splitter.Merge(drawList);
+        // TODO: child component render support, do this after Layout System complete.
+    }
+
+    bool IComponent::getIsDead() const {
         return isDead;
+    }
+
+    IComponent::~IComponent() {
+        components.clear();
+
+        for (auto layerB : layersBefore) {
+            delete layerB;
+        }
+        layersBefore.clear();
+
+        for (auto layerA : layersAfter) {
+            delete layerA;
+        }
+        layersAfter.clear();
     }
 }

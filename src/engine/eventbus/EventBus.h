@@ -18,6 +18,13 @@ namespace cmaterial::event {
     class IHandler;
     class IEvent;
 
+    /**
+     * @brief The core of the Event System.
+     *
+     * @details --- DANGER ZONE ---
+     * @details @code bool dispatch()@endcode : This is used by the framework itself to update. DO NOT USE IT!
+     * @details @code void shutdown()@endcode : This is used by the framework itself to clean. DO NOT USE IT!
+     */
     class EventBus {
     public:
         ~EventBus();

@@ -12,16 +12,25 @@
 
 
 namespace cmaterial::animation {
-    class Player{
+    /**
+     * @brief The Animation player.
+     * @details You will play all the Animation in here.
+     *
+     * @details --- Danger Zone ---
+     * @details @code update()@endcode : This is used by the framework itself to update. DO NOT USE IT!
+     */
+    class Player {
     public:
         Player() = default;
         ~Player();
 
         static void play(IAnimation* animation);
+        static void forward(IAnimation* animation);
+        static void backward(IAnimation* animation);
         static void reverse(IAnimation* animation);
         static void stop(IAnimation* animation);
 
-        static bool update();
+        static std::vector<IAnimation *>* update();
 
         static void shutdown();
 

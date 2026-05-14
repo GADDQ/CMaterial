@@ -5,16 +5,40 @@
 #include "Player.h"
 
 #include <vector>
-#include <imgui.h>
+
+#include "glad/gl.h"
+#include "GLFW/glfw3.h"
 
 namespace cmaterial::animation {
     std::vector<IAnimation *> Player::playingAnimations;
     std::vector<IAnimation *> Player::finishedAnimations;
 
     void Player::play(IAnimation *animation) {
-        if (!animation) return;
+        if (animation == nullptr) return;
+
+        if (std::ranges::find(playingAnimations, animation) != playingAnimations.end()) {
+            return;
+        }
 
         playingAnimations.push_back(animation);
+    }
+
+    void Player::forward(IAnimation *animation) {
+        if (!animation) return;
+
+        for (auto binder : *animation->getAnimationBinders()) {
+            binder.second->forward();
+        }
+        animation->_isReverse = false;
+    }
+
+    void Player::backward(IAnimation *animation) {
+        if (!animation) return;
+
+        for (auto binder : *animation->getAnimationBinders()) {
+            binder.second->backward();
+        }
+        animation->_isReverse = true;
     }
 
     void Player::reverse(IAnimation *animation) {
@@ -37,21 +61,32 @@ namespace cmaterial::animation {
         std::erase(playingAnimations, animation);
     }
 
-    bool Player::update() {
-        if (playingAnimations.empty())
-            return false;
+    std::vector<IAnimation *>* Player::update() {
+        static double lastTime = glfwGetTime();
+        double currentTime = glfwGetTime();
+        double dt = currentTime - lastTime;
+        lastTime = currentTime;
 
-        int dtTime = static_cast<int>(ImGui::GetIO().DeltaTime * 100000.0f);
-        if (dtTime <= 0) dtTime = 1; // 1 step = 0.01 ms
+        if (dt > 0.1 || dt <= 0.0)
+            dt = 0.00001;
+
+        int dtTime = static_cast<int>(dt * 100000.0); // 1 step = 0.01 ms
 
         for (auto animation : playingAnimations) {
             bool allTweensFinished = true;
             for (auto binder : *animation->getAnimationBinders()) {
                 *binder.first = binder.second->step(dtTime);
 
-                if (!binder.second->isFinished()) {
-                    allTweensFinished = false;
+                if (!animation->_isReverse) {
+                    if (!binder.second->isFinished()) {
+                        allTweensFinished = false;
+                    }
+                } else {
+                    if (binder.second->progress() != 0) {
+                        allTweensFinished = false;
+                    }
                 }
+
             }
 
             if (allTweensFinished) {
@@ -64,11 +99,12 @@ namespace cmaterial::animation {
 
         for (auto animation : finishedAnimations) {
             std::erase(playingAnimations, animation);
+            animation->_isFinished = true;
         }
 
         finishedAnimations.clear();
 
-        return true;
+        return &playingAnimations;
     }
 
     void Player::shutdown() {
