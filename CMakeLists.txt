@@ -61,6 +61,7 @@ else()
                 message(STATUS "  Patch applied successfully.")
             endif()
         endif()
+        message(STATUS "")
     endforeach()
 endif()
 
