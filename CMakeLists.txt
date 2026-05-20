@@ -22,6 +22,55 @@ set(MI_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(MI_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 set(MI_BUILD_OBJECT OFF CACHE BOOL "" FORCE)
 
+set(GLFW_SRC_DIR   "${PROJECT_SOURCE_DIR}/submodule/glfw")   # GLFW 根目录
+set(PATCH_DIR      "${PROJECT_SOURCE_DIR}/patch")            # 存放 .patch 文件
+
+message(STATUS "Applying .patch files...")
+
+file(GLOB PATCH_FILES "${PATCH_DIR}/*.patch")
+list(LENGTH PATCH_FILES PATCH_COUNT)
+
+if(PATCH_COUNT EQUAL 0)
+    message(STATUS "No .patch files found in ${PATCH_DIR}, skipping.")
+else()
+    # 确保系统安装了 patch 命令
+    find_program(PATCH_EXECUTABLE patch REQUIRED)
+
+    foreach(PATCH_FILE ${PATCH_FILES})
+        message(STATUS "Checking patch: ${PATCH_FILE}")
+
+        # ---- 核心判断：反向干运行，检查是否已应用 ----
+        execute_process(
+                COMMAND ${PATCH_EXECUTABLE} --dry-run -R -p1 -i "${PATCH_FILE}"
+                WORKING_DIRECTORY "${GLFW_SRC_DIR}"
+                RESULT_VARIABLE REVERSE_RESULT
+                OUTPUT_QUIET
+                ERROR_QUIET
+        )
+
+        if(REVERSE_RESULT EQUAL 0)
+            # 反向干运行成功 → 补丁已经应用过
+            message(STATUS "  Patch already applied, skipping.")
+        else()
+            # 未应用过，执行正向补丁
+            message(STATUS "  Applying patch...")
+            execute_process(
+                    COMMAND ${PATCH_EXECUTABLE} -p1 -i "${PATCH_FILE}"
+                    WORKING_DIRECTORY "${GLFW_SRC_DIR}"
+                    RESULT_VARIABLE APPLY_RESULT
+            )
+            if(NOT APPLY_RESULT EQUAL 0)
+                message(FATAL_ERROR "Failed to apply patch ${PATCH_FILE}")
+            else()
+                message(STATUS "  Patch applied successfully.")
+            endif()
+        endif()
+    endforeach()
+endif()
+
+message(STATUS "All Patches have been applied successfully.")
+message(STATUS "")
+
 add_subdirectory(submodule/glfw)
 add_subdirectory(submodule/tweeny)
 add_subdirectory(submodule/mimalloc)

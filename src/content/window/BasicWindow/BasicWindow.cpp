@@ -14,6 +14,13 @@ namespace cmaterial::window {
     void BasicWindow::render(ImGuiIO *io) {
         ImGui::Text("Hello, Engine!");
         ImGui::Text("Frame time: %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
+        char input_buffer[256] = "IME Test";
+        ImVec2 single_line_size = ImVec2(0, ImGui::GetFrameHeight());
+
+        ImGui::InputTextMultiline("##ime_test",
+                                  input_buffer,
+                                  IM_ARRAYSIZE(input_buffer),
+                                  single_line_size);
 
         ImGui::Separator();
     }

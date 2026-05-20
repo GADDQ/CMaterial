@@ -1,0 +1,51 @@
+diff --git a/src/cocoa_window.m b/src/cocoa_window.m
+index 1769f79b..20cf4a6a 100644
+--- a/src/cocoa_window.m
++++ b/src/cocoa_window.m
+@@ -562,6 +562,12 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
+ 
+ - (void)keyDown:(NSEvent *)event
+ {
++    if ([self hasMarkedText] || [markedText length] > 0)
++    {
++        [self interpretKeyEvents:@[event]];
++        return;
++    }
++
+     const int key = translateKey([event keyCode]);
+     const int mods = translateFlags([event modifierFlags]);
+ 
+@@ -594,6 +600,9 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
+ 
+ - (void)keyUp:(NSEvent *)event
+ {
++    if ([self hasMarkedText] || [markedText length] > 0)
++        return;
++
+     const int key = translateKey([event keyCode]);
+     const int mods = translateFlags([event modifierFlags]);
+     _glfwInputKey(window, key, [event keyCode], GLFW_RELEASE, mods);
+diff --git a/src/x11_window.c b/src/x11_window.c
+index f46a7e6c..f756b8d8 100644
+--- a/src/x11_window.c
++++ b/src/x11_window.c
+@@ -1246,6 +1246,9 @@ static void processEvent(XEvent *event)
+ 
+         case KeyPress:
+         {
++            if (filtered)
++                return;
++
+             const int key = translateKey(keycode);
+             const int mods = translateState(event->xkey.state);
+             const int plain = !(mods & (GLFW_MOD_CONTROL | GLFW_MOD_ALT));
+@@ -1318,6 +1321,9 @@ static void processEvent(XEvent *event)
+ 
+         case KeyRelease:
+         {
++            if (filtered)
++                return;
++
+             const int key = translateKey(keycode);
+             const int mods = translateState(event->xkey.state);
+ 

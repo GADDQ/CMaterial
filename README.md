@@ -33,8 +33,8 @@ Design your own components however you wish using OpenGL 3.3 Core and ImGui APIs
 ## Hybrid Mode
 Neither Immediate Mode nor Retained Mode—but ***both***. CMaterial leverages Retained Mode at the **UI Layer** for the structural integrity of a mature framework, while empowering the **Component Layer** with Immediate Mode for unrestricted control over how every pixel is rendered.
 
-## Pure Upper-Layer Construction
-All of CMaterial's functionality is implemented entirely at the upper layer, **without modifying a single line of code from dependent libraries**. In most cases, you can update the dependent libraries on your own, enjoying all upstream updates **without spending time re-porting the framework**.
+## 99.9% Pure Upper-Layer Construction
+In CMaterial, **99.9%** of the functionality is implemented entirely at the upper layer, **without modifying a single line of code from dependent libraries**. In most cases, you can update the dependent libraries on your own, enjoying all upstream updates **without spending time re-porting the framework**.
 
 ---
 
@@ -55,3 +55,8 @@ All of CMaterial's functionality is implemented entirely at the upper layer, **w
 - **[CMake](https://cmake.org/)** : A powerful, industry-standard software build system.
 - **[MSVC](https://visualstudio.microsoft.com/vs/features/cplusplus/)** : Microsoft Visual C++ Compiler, used for Windows builds.
 - **[GCC](https://gcc.gnu.org/)** : The GNU Compiler Collection, used for Linux builds.
+
+---
+
+## Special Thanks
+- **[nth233](https://github.com/fpg2012)**: The IME fix [solution](https://nth233.top/posts/2025-12-02-glfw%E8%BE%93%E5%85%A5%E6%B3%95%E8%A1%A5%E4%B8%81/) was obtained after I reviewed his blog. Many thanks for his selfless sharing!
