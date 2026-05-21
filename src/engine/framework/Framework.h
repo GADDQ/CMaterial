@@ -24,7 +24,7 @@ namespace cmaterial {
             GLAD_LOAD_GL_FAILED
         };
 
-        Framework() = default;
+        Framework();
         ~Framework();
 
         error initialize();

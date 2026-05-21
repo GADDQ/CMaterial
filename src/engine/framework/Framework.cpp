@@ -10,7 +10,16 @@
 #include "imgui.h"
 
 #ifdef _WIN32
-#include <mimalloc-new-delete.h>
+#   include <mimalloc-new-delete.h>
+#   ifndef _WINDOWS_
+using UINT = unsigned int;
+using MMRESULT = UINT;
+#   endif
+
+extern "C" {
+    MMRESULT timeBeginPeriod(UINT uPeriod);
+    MMRESULT timeEndPeriod(UINT uPeriod);
+}
 #endif
 
 #include "engine/eventbus/EventBus.h"
@@ -21,14 +30,16 @@
 #include <chrono>
 #include <thread>
 
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
 #include "engine/animation/Player.h"
 #include "engine/eventbus/internal/listener/ForceRedrawListener.hpp"
 
 using EventBus = cmaterial::event::EventBus;
 
 namespace cmaterial {
+    Framework::Framework() {
+        timeBeginPeriod(1);
+    }
+
     /**
      * @brief
      * @details Initialize CMaterial Engine.
@@ -81,7 +92,6 @@ namespace cmaterial {
         const GLFWvidmode* mode = glfwGetVideoMode(primary);
         double targetHz = (mode && mode->refreshRate > 0) ? mode->refreshRate : 60.0;
         double frameDuration = 1.0 / targetHz;
-        double frameTimeout = frameDuration / 1000.0f;
 
         double nextFrameTime = glfwGetTime();
 
@@ -94,25 +104,25 @@ namespace cmaterial {
             auto playingAnimations = animation::Player::update();
             bool isAnimationBusy = !playingAnimations->empty();
 
+            double now = glfwGetTime();
+
+            if (now < nextFrameTime) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1)); // who will have 1000+ Hz monitor? 1 ms should be fine in all the time
+                continue;
+            }
+
+            nextFrameTime += frameDuration;
+
+            if (nextFrameTime < now)
+                nextFrameTime = now + frameDuration;
+
             if (!(isEventBusy || isAnimationBusy)) {
-                double now = glfwGetTime();
-
-                if (now < nextFrameTime) {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(1)); // who will have 1000+ Hz monitor? 1 ms should be fine in all the time
-                    continue;
-                }
-
-                nextFrameTime += frameDuration;
-
-                if (nextFrameTime < now)
-                    nextFrameTime = now + frameDuration;
-
                 glfwWaitEvents();
             } else {
                 if (!isNotFirstRender)
                     isNotFirstRender = true;
                 else
-                    glfwWaitEventsTimeout(frameTimeout);
+                    glfwPollEvents();
             }
 
             ImFontAtlasUpdateNewFrame(fontAtlas, ++globalFrameCount, true);
@@ -185,5 +195,6 @@ namespace cmaterial {
         ImGui::DestroyContext(hiddenImgui);
         glfwDestroyWindow(hiddenWindow);
         glfwTerminate();
+        timeEndPeriod(1);
     }
 }

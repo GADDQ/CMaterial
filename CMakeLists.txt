@@ -124,6 +124,10 @@ target_link_libraries(CMaterial PRIVATE
         mimalloc-static
 )
 
+if(WIN32)
+    target_link_libraries(CMaterial PRIVATE winmm)
+endif()
+
 if(MSVC AND CMAKE_BUILD_TYPE MATCHES "Release")
     target_compile_options(CMaterial PRIVATE
             /O1
