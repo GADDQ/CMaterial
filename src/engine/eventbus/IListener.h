@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/16.
 //
 
-#ifndef CMATERIAL_ILISTENER_H
-#define CMATERIAL_ILISTENER_H
+#pragma once
 
 
 #include <vector>
@@ -96,6 +95,3 @@ namespace cmaterial::event {
     int _h_##MethodName = this->_do_bind<EventT>([this](EventT *e) { this->MethodName(e); }, OrderVal);
 
 #define EVENTHANDLER(...) EXPAND(GET_EH_MACRO(__VA_ARGS__, EVENTHANDLER_3, EVENTHANDLER_2)(__VA_ARGS__))
-
-
-#endif // CMATERIAL_ILISTENER_H

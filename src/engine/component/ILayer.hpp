@@ -2,11 +2,10 @@
 // Created by Earth_Studio on 2026/4/26.
 //
 
-#ifndef CMATERIAL_ILAYER_H
-#define CMATERIAL_ILAYER_H
+#pragma once
 
 
-#include "engine/utils/INode.h"
+#include "engine/utils/INode.hpp"
 #include "imgui.h"
 
 
@@ -35,7 +34,3 @@ namespace cmaterial::component {
         int priority = 0;
     };
 }
-
-
-
-#endif //CMATERIAL_ILAYER_H

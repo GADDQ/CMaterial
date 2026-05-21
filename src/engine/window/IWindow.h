@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/19.
 //
 
-#ifndef CMATERIAL_IWINDOW_H
-#define CMATERIAL_IWINDOW_H
+#pragma once
 
 
 #include <unordered_map>
@@ -93,7 +92,3 @@ namespace cmaterial::window {
         std::unordered_map<ImGuiStyleVar, float> styles;
     };
 }
-
-
-
-#endif //CMATERIAL_IWINDOW_H

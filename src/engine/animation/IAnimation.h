@@ -2,13 +2,12 @@
 // Created by Earth_Studio on 2026/4/26.
 //
 
-#ifndef CMATERIAL_IANIMATION_H
-#define CMATERIAL_IANIMATION_H
+#pragma once
 
 
 #include <unordered_map>
 
-#include "engine/utils/INode.h"
+#include "engine/utils/INode.hpp"
 #include "tween.h"
 
 
@@ -52,7 +51,3 @@ namespace cmaterial::animation {
         std::vector<std::pair<double *, tweeny::tween<double> *>> animationBinders;
     };
 }
-
-
-
-#endif //CMATERIAL_IANIMATION_H

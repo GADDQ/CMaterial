@@ -2,12 +2,14 @@
 // Created by Earth_Studio on 2026/5/13.
 //
 
-#ifndef CMATERIAL_RIPPLELAYER_H
-#define CMATERIAL_RIPPLELAYER_H
+#pragma once
+
+
 #include "engine/component/ILayer.hpp"
 #include "imgui.h"
 
-#include "content/animation/material/RippleAnimation.h"
+#include "content/animation/material/RippleAnimation.hpp"
+
 
 namespace cmaterial::component::material::layer {
     class RippleLayer : public ILayer {
@@ -28,7 +30,3 @@ namespace cmaterial::component::material::layer {
         animation::RippleAnimation m_anim;
     };
 }
-
-
-
-#endif //CMATERIAL_RIPPLELAYER_H

@@ -2,11 +2,13 @@
 // Created by Earth_Studio on 2026/5/12.
 //
 
-#ifndef CMATERIAL_BUTTON_H
-#define CMATERIAL_BUTTON_H
-#include "content/animation/material/HoverAnimation.h"
+#pragma once
+
+
+#include "content/animation/material/HoverAnimation.hpp"
 #include "engine/component/IComponent.h"
-#include "layer/BGLayer.h"
+#include "layer/BackgroundLayer.hpp"
+
 
 namespace cmaterial::component::material {
     class Button : public IComponent {
@@ -22,11 +24,7 @@ namespace cmaterial::component::material {
         bool m_isHovering = false;
         bool m_isPressed = false;
 
-        layer::BGLayer * m_bgLayer = nullptr;
+        layer::BackgroundLayer * m_bgLayer = nullptr;
         animation::HoverAnimation* m_hoverAnim = nullptr;
     };
 }
-
-
-
-#endif //CMATERIAL_BUTTON_H

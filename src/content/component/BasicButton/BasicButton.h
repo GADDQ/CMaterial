@@ -2,12 +2,11 @@
 // Created by Earth_Studio on 2026/4/16.
 //
 
-#ifndef CMATERIAL_BASICBUTTON_H
-#define CMATERIAL_BASICBUTTON_H
-
+#pragma once
 
 
 #include "engine/component/IComponent.h"
+
 
 namespace cmaterial::component {
     class BasicButton : public IComponent {
@@ -19,7 +18,3 @@ namespace cmaterial::component {
         void (*onActive)() =[]() {};
     };
 }
-
-
-
-#endif //CMATERIAL_BASICBUTTON_H

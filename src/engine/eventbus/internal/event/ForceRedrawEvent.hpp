@@ -2,8 +2,9 @@
 // Created by Earth_Studio on 2026/4/18.
 //
 
-#ifndef CMATERIAL_EMPTYEVENT_H
-#define CMATERIAL_EMPTYEVENT_H
+#pragma once
+
+
 #include "engine/eventbus/IEvent.hpp"
 
 
@@ -12,7 +13,3 @@ namespace cmaterial::event::internal {
         REGISTEREVENT(ForceRedrawEvent);
     };
 }
-
-
-
-#endif //CMATERIAL_EMPTYEVENT_H

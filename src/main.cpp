@@ -8,7 +8,7 @@
 #include "content/component/BasicButton/BasicButton.h"
 #include "content/component/CreatorButton/CreatorButton.h"
 #include "content/component/material/Button/Button.h"
-#include "content/logic/listener/WindowLogic.h"
+#include "content/logic/listener/WindowLogic.hpp"
 #include "content/window/BasicWindow/BasicWindow.h"
 
 using namespace cmaterial;

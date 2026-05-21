@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/5/6.
 //
 
-#ifndef CMATERIAL_INODE_H
-#define CMATERIAL_INODE_H
+#pragma once
 
 
 namespace cmaterial::utils {
@@ -13,7 +12,3 @@ namespace cmaterial::utils {
         INode * parent = nullptr;
     };
 }
-
-
-
-#endif //CMATERIAL_INODE_H

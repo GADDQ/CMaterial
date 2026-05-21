@@ -2,16 +2,17 @@
 // Created by Earth_Studio on 2026/5/13.
 //
 
-#ifndef CMATERIAL_BACKGROUNDLAYER_H
-#define CMATERIAL_BACKGROUNDLAYER_H
+#pragma once
+
+
 #include "engine/component/ILayer.hpp"
 #include "imgui.h"
 
 
 namespace cmaterial::component::material::layer {
-    class BGLayer : public ILayer {
+    class BackgroundLayer : public ILayer {
     public:
-        BGLayer() { priority = -2; }
+        BackgroundLayer() { priority = -2; }
         void render(ImDrawList* drawList, ImVec2 startPos, ImVec2 size) override {
             float mix = static_cast<float>(hoverAlpha) * 0.08f;
             ImVec4 finalColor = ImVec4(
@@ -29,7 +30,3 @@ namespace cmaterial::component::material::layer {
         ImVec4 onPrimaryColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
     };
 }
-
-
-
-#endif //CMATERIAL_BACKGROUNDLAYER_H

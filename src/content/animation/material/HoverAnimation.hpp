@@ -2,10 +2,12 @@
 // Created by Earth_Studio on 2026/5/13.
 //
 
-#ifndef CMATERIAL_HOVERANIMATION_H
-#define CMATERIAL_HOVERANIMATION_H
+#pragma once
+
+
 #include <engine/animation/IAnimation.h>
 #include "tweeny.h"
+
 
 namespace cmaterial::component::material::animation {
     class HoverAnimation : public cmaterial::animation::IAnimation {
@@ -20,7 +22,3 @@ namespace cmaterial::component::material::animation {
         }
     };
 }
-
-
-
-#endif //CMATERIAL_HOVERANIMATION_H

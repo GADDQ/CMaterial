@@ -2,8 +2,9 @@
 // Created by Earth_Studio on 2026/4/27.
 //
 
-#ifndef CMATERIAL_OVERLAYLAYER_H
-#define CMATERIAL_OVERLAYLAYER_H
+#pragma once
+
+
 #include "engine/component/ILayer.hpp"
 
 
@@ -16,7 +17,3 @@ namespace cmaterial::component::layer::animationbutton {
         void render(ImDrawList *drawList, ImVec2 startPos, ImVec2 size) override;
     };
 }
-
-
-
-#endif //CMATERIAL_OVERLAYLAYER_H

@@ -2,11 +2,12 @@
 // Created by Earth_Studio on 2026/4/15.
 //
 
-#ifndef CMATERIAL_BASICWINDOW_H
-#define CMATERIAL_BASICWINDOW_H
+#pragma once
+
 
 #include "engine/window/IWindow.h"
 #include "imgui.h"
+
 
 namespace cmaterial::window {
     class BasicWindow : public IWindow {
@@ -18,7 +19,3 @@ namespace cmaterial::window {
         void render(ImGuiIO *io) override;
     };
 }
-
-
-
-#endif //CMATERIAL_BASICWINDOW_H

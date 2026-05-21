@@ -2,8 +2,9 @@
 // Created by Earth_Studio on 2026/5/13.
 //
 
-#ifndef CMATERIAL_RIPPLEANIMATION_H
-#define CMATERIAL_RIPPLEANIMATION_H
+#pragma once
+
+
 #include "engine/animation/IAnimation.h"
 #include "tweeny.h"
 
@@ -27,6 +28,3 @@ namespace cmaterial::component::material::animation {
         tweeny::tween<double> alphaTween;
     };
 }
-
-
-#endif //CMATERIAL_RIPPLEANIMATION_H

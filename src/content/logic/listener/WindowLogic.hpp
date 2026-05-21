@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/17.
 //
 
-#ifndef CMATERIAL_TESTLISTENER_H
-#define CMATERIAL_TESTLISTENER_H
+#pragma once
 
 
 #include "content/logic/event/SpawnWindowRequest.hpp"
@@ -25,7 +24,3 @@ namespace cmaterial::event {
         }
     };
 }
-
-
-
-#endif //CMATERIAL_TESTLISTENER_H

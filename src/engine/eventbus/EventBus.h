@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/16.
 //
 
-#ifndef CMATERIAL_EVENTBUS_H
-#define CMATERIAL_EVENTBUS_H
+#pragma once
 
 
 #include <vector>
@@ -46,8 +45,3 @@ namespace cmaterial::event {
         static std::mutex queueMutex;
     };
 }
-
-
-
-
-#endif //CMATERIAL_EVENTBUS_H

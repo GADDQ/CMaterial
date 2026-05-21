@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/19.
 //
 
-#ifndef CMATERIAL_FRAMEWORK_H
-#define CMATERIAL_FRAMEWORK_H
+#pragma once
 
 
 #include <glad/gl.h>
@@ -47,7 +46,3 @@ namespace cmaterial {
         std::vector<std::string> deadWindows;
     };
 }
-
-
-
-#endif //CMATERIAL_FRAMEWORK_H

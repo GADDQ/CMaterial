@@ -11,7 +11,7 @@
 
 namespace cmaterial::component::material {
     Button::Button() {
-        m_bgLayer = new layer::BGLayer();
+        m_bgLayer = new layer::BackgroundLayer();
         addLayer(m_bgLayer);
     }
 

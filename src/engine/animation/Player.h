@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/22.
 //
 
-#ifndef CMATERIAL_ANIMATION_H
-#define CMATERIAL_ANIMATION_H
+#pragma once
 
 
 #include <vector>
@@ -39,7 +38,3 @@ namespace cmaterial::animation {
         static std::vector<IAnimation *> finishedAnimations;
     };
 }
-
-
-
-#endif //CMATERIAL_ANIMATION_H

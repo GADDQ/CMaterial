@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/16.
 //
 
-#ifndef CMATERIAL_CREATORBUTTON_H
-#define CMATERIAL_CREATORBUTTON_H
+#pragma once
 
 
 #include "content/logic/event/SpawnWindowRequest.hpp"
@@ -27,8 +26,3 @@ namespace cmaterial::component {
         }
     };
 }
-
-
-
-
-#endif //CMATERIAL_CREATORBUTTON_H

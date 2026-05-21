@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/15.
 //
 
-#ifndef CMATERIAL_ICOMPONENT_H
-#define CMATERIAL_ICOMPONENT_H
+#pragma once
 
 
 
@@ -13,7 +12,7 @@
 #include <string>
 
 #include "ILayer.hpp"
-#include "engine/utils/INode.h"
+#include "engine/utils/INode.hpp"
 
 
 namespace cmaterial::component {
@@ -66,7 +65,3 @@ namespace cmaterial::component {
         std::vector<ILayer *> layersAfter;
     };
 }
-
-
-
-#endif //CMATERIAL_ICOMPONENT_H

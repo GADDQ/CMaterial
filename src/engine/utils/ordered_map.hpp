@@ -2,14 +2,13 @@
 // Created by Earth_Studio on 2026/5/1.
 //
 
-#ifndef CMATERIAL_ORDERED_MAP_H
-#define CMATERIAL_ORDERED_MAP_H
-
+#pragma once
 
 
 #include <unordered_map>
 #include <list>
 #include <utility>
+
 
 namespace cmaterial::utils {
     template<typename K, typename V>
@@ -86,7 +85,3 @@ namespace cmaterial::utils {
         std::unordered_map<K, ListIter> lookup;
     };
 }
-
-
-
-#endif //CMATERIAL_ORDERED_MAP_H

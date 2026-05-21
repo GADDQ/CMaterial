@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/25.
 //
 
-#ifndef CMATERIAL_ANIMATIONBUTTON_H
-#define CMATERIAL_ANIMATIONBUTTON_H
+#pragma once
 
 
 #include "engine/component/IComponent.h"
@@ -25,7 +24,3 @@ namespace cmaterial::component {
         layer::animationbutton::OverlayLayer overlayLayer;
     };
 }
-
-
-
-#endif //CMATERIAL_ANIMATIONBUTTON_H

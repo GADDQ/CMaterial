@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/16.
 //
 
-#ifndef CMATERIAL_IEVENT_H
-#define CMATERIAL_IEVENT_H
+#pragma once
 
 
 namespace cmaterial::event {
@@ -50,7 +49,3 @@ namespace cmaterial::event {
         }
     };
 }
-
-
-
-#endif //CMATERIAL_IEVENT_H

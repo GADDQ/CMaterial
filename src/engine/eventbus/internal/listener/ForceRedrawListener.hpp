@@ -2,8 +2,7 @@
 // Created by Earth_Studio on 2026/4/27.
 //
 
-#ifndef CMATERIAL_FORCEREDRAWLISTENER_H
-#define CMATERIAL_FORCEREDRAWLISTENER_H
+#pragma once
 
 
 #include "engine/eventbus/IListener.h"
@@ -29,7 +28,3 @@ namespace cmaterial::event::internal {
         bool* isForceRedraw;
     };
 }
-
-
-
-#endif //CMATERIAL_FORCEREDRAWLISTENER_H
