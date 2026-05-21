@@ -81,6 +81,7 @@ namespace cmaterial {
         const GLFWvidmode* mode = glfwGetVideoMode(primary);
         double targetHz = (mode && mode->refreshRate > 0) ? mode->refreshRate : 60.0;
         double frameDuration = 1.0 / targetHz;
+        double frameTimeout = frameDuration / 1000.0f;
 
         double nextFrameTime = glfwGetTime();
 
@@ -111,7 +112,7 @@ namespace cmaterial {
                 if (!isNotFirstRender)
                     isNotFirstRender = true;
                 else
-                    glfwPollEvents();
+                    glfwWaitEventsTimeout(frameTimeout);
             }
 
             ImFontAtlasUpdateNewFrame(fontAtlas, ++globalFrameCount, true);
