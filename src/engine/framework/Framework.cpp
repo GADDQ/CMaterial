@@ -36,9 +36,11 @@ extern "C" {
 using EventBus = cmaterial::event::EventBus;
 
 namespace cmaterial {
+#ifdef _WIN32
     Framework::Framework() {
         timeBeginPeriod(1);
     }
+#endif
 
     /**
      * @brief
@@ -195,6 +197,8 @@ namespace cmaterial {
         ImGui::DestroyContext(hiddenImgui);
         glfwDestroyWindow(hiddenWindow);
         glfwTerminate();
+#ifdef _WIN32
         timeEndPeriod(1);
+#endif
     }
 }

@@ -24,7 +24,11 @@ namespace cmaterial {
             GLAD_LOAD_GL_FAILED
         };
 
+#ifdef _WIN32
         Framework();
+#else
+        Framework() = default;
+#endif
         ~Framework();
 
         error initialize();
