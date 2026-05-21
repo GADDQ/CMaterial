@@ -22,51 +22,53 @@ set(MI_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(MI_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 set(MI_BUILD_OBJECT OFF CACHE BOOL "" FORCE)
 
-set(GLFW_SRC_DIR   "${PROJECT_SOURCE_DIR}/submodule/glfw")
-set(PATCH_DIR      "${PROJECT_SOURCE_DIR}/patch")
+if (NOT MSVC)
+    set(GLFW_SRC_DIR   "${PROJECT_SOURCE_DIR}/submodule/glfw")
+    set(PATCH_DIR      "${PROJECT_SOURCE_DIR}/patch")
 
-message(STATUS "Applying .patch files...")
+    message(STATUS "Applying .patch files to glfw...")
 
-file(GLOB PATCH_FILES "${PATCH_DIR}/*.patch")
-list(LENGTH PATCH_FILES PATCH_COUNT)
+    file(GLOB PATCH_FILES "${PATCH_DIR}/*.patch")
+    list(LENGTH PATCH_FILES PATCH_COUNT)
 
-if(PATCH_COUNT EQUAL 0)
-    message(STATUS "No .patch files found in ${PATCH_DIR}, skipping.")
-else()
-    find_program(PATCH_EXECUTABLE patch REQUIRED)
+    if(PATCH_COUNT EQUAL 0)
+        message(STATUS "No .patch files found in ${PATCH_DIR}, skipping.")
+    else()
+        find_program(PATCH_EXECUTABLE patch REQUIRED)
 
-    foreach(PATCH_FILE ${PATCH_FILES})
-        message(STATUS "Checking patch: ${PATCH_FILE}")
+        foreach(PATCH_FILE ${PATCH_FILES})
+            message(STATUS "Checking patch: ${PATCH_FILE}")
 
-        execute_process(
-                COMMAND ${PATCH_EXECUTABLE} --dry-run -R -p1 -i "${PATCH_FILE}"
-                WORKING_DIRECTORY "${GLFW_SRC_DIR}"
-                RESULT_VARIABLE REVERSE_RESULT
-                OUTPUT_QUIET
-                ERROR_QUIET
-        )
-
-        if(REVERSE_RESULT EQUAL 0)
-            message(STATUS "  Patch already applied, skipping.")
-        else()
-            message(STATUS "  Applying patch...")
             execute_process(
-                    COMMAND ${PATCH_EXECUTABLE} -p1 -i "${PATCH_FILE}"
+                    COMMAND ${PATCH_EXECUTABLE} --dry-run -R -p1 -i "${PATCH_FILE}"
                     WORKING_DIRECTORY "${GLFW_SRC_DIR}"
-                    RESULT_VARIABLE APPLY_RESULT
+                    RESULT_VARIABLE REVERSE_RESULT
+                    OUTPUT_QUIET
+                    ERROR_QUIET
             )
-            if(NOT APPLY_RESULT EQUAL 0)
-                message(FATAL_ERROR "Failed to apply patch ${PATCH_FILE}")
-            else()
-                message(STATUS "  Patch applied successfully.")
-            endif()
-        endif()
-        message(STATUS "")
-    endforeach()
-endif()
 
-message(STATUS "All Patches have been applied successfully.")
-message(STATUS "")
+            if(REVERSE_RESULT EQUAL 0)
+                message(STATUS "  Patch already applied, skipping.")
+            else()
+                message(STATUS "  Applying patch...")
+                execute_process(
+                        COMMAND ${PATCH_EXECUTABLE} -p1 -i "${PATCH_FILE}"
+                        WORKING_DIRECTORY "${GLFW_SRC_DIR}"
+                        RESULT_VARIABLE APPLY_RESULT
+                )
+                if(NOT APPLY_RESULT EQUAL 0)
+                    message(FATAL_ERROR "Failed to apply patch ${PATCH_FILE}")
+                else()
+                    message(STATUS "  Patch applied successfully.")
+                endif()
+            endif()
+            message(STATUS "")
+        endforeach()
+    endif()
+
+    message(STATUS "All Patches have been applied successfully.")
+    message(STATUS "")
+endif ()
 
 add_subdirectory(submodule/glfw)
 add_subdirectory(submodule/tweeny)
